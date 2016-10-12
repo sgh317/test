@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>客户信息确认</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/sm.min.css">
+    <link rel="stylesheet" href="css/sm-extend.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="css/card.insur.css?v=1.0" />
+</head>
+<body>
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title">客户信息确认</h1>
+        </header>
+        <nav class="bar bar-tab bar-button">
+            <div class="webkit-box-align">
+                <div>
+                    <a id="J_action" href="#" class="button button-fill button-danger">确认下单</a>
+                </div>
+            </div>
+        </nav>
+        <div class="content accordion-list">
+            <div class="form-box list-block white">
+                <div class="form-title">客户信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">被保人：朱小伟</span>
+                                <span class="end-time">证件：身份证</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span>证件号码：430728190803290293</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-box list-block white">
+                <div class="form-title">投保金额信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="buy-price">保费总额:<em style="color: #A11818;"> ¥4,300.00</em></div>
+                                <div class="buy-price">可抵扣金额:<em style="color: #C27E54;"> ¥600</em></div>
+                                <div class="buy-price">应付金额:<em style="color: #0C9908; font-weight: bold;"> ¥3,700.00</em></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-box">
+                <div class="form-title">请选择支付方式</div>
+                <ul class="other-info">
+                    <li>
+                    	<span style="margin-left: 20px;"><input type="radio" name="payType"/><em> 微信支付</em><em style="color: red; font-size: 12px;">(微信支付，商业保险费立减50元！)</em></span>
+                    </li>
+                    <li>
+                    	<span style="margin-left: 20px;"><input type="radio" name="payType"/><em> 至大地网点现场支付</em></span>
+                    </li>
+                    <li>
+                    	<span style="margin-left: 20px;"><input type="radio" name="payType"/><em> 预约服务人员上门收费及配送保单</em></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='js/sm-extend.min.js' charset='utf-8'></script>
+    <script type="text/javascript">
+        $(function(){
+            $.init();
+            $(".input-date").calendar();
+            $("#J_action").bind("click",function(){  // 演示链接,开发时请忽略
+                location.href = "detail_info.html";
+            })
+
+            $(".form-title").bind("click",function(){
+                $(this).siblings().toggle();
+            })
+        })
+    </script>
+</body>
+</html>

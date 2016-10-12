@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>万果千仓</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="../lib/sui/sm.min.css">
+    <link rel="stylesheet" href="../lib/slick/slick.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../css/app.css?v=1.0" />
+</head>
+<body>
+<style type="text/css">
+    .page {
+        background-color:#fff;
+    }
+</style>
+<div class="page-group">
+    <div class="page">
+        <div class="content">
+            <div class="list-title">余额</div>
+            <div class="balance-box flex-box justify">
+                <div class="">当前余额：<span class="color-warning">¥300</span></div>
+                <div>
+                    <a href="my_balance_recharge.html" class="button button-fill button-danger button-small">我要充值</a>
+                </div>
+            </div>
+            <div class="list-title-s">我的消费记录</div>
+            <div class="mod-section">
+                <ul>
+                    <li>
+                        <div class="mod-section-left">
+                            <div class="balance-name">购买 长白山雪莲 订单编号：0022000</div>
+                            <div class="balance-time">2016-09-03 12:02:43</div>
+                        </div>
+                        <div class="mod-section-right">
+                            <span class="balance-num color-warning">-100</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="mod-section-left">
+                            <div class="balance-name">充值  订单编号：0022000</div>
+                            <div class="balance-time">2016-09-03 12:02:43</div>
+                        </div>
+                        <div class="mod-section-right">
+                            <span class="balance-num color-warning">+300</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../lib/zepto/zepto.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../lib/jquery/jquery-1.8.3.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+    Zepto.config = {
+        router:false   // 关闭页面路由
+    }
+</script>
+<script type="text/javascript" src="../lib/sui/sm.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../lib/slick/slick.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/app.js" charset="utf-8"></script>
+<script type="text/javascript">
+    Zepto(function() {
+        Zepto.init();  // 页面初始化
+    });
+</script>
+<script type="text/javascript">
+</script>
+</body>
+</html>

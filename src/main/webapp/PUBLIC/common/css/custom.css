@@ -1,0 +1,45 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{center bottom no-repeat; height:100%;}
+.yanzhen{ padding-left:20px;}
+.texred{ color: #F00; margin-top:8px;}
+.tabtdw{ width:30%;}
+.hlbg{margin-top:5px;padding-top:10px; padding-bottom:10px; background:#BA272D; color:#ffffff; padding-left:10px; margin-bottom:10px;}
+.hlbg h7{ color:#EEEEEE;}
+.hlje{ padding-left:10px; border-bottom:1px solid #EEEEEE; margin-bottom:5px;}
+.zhye{ padding-left:10px; border-bottom:1px solid #EEEEEE;  margin-bottom:5px;}
+.btn-danger {
+  color: #ffffff;
+  background-color:#BC1117;
+  border-color: #d43f3a;
+}
+.green{ color:#49B906;}
+.red{ color:#BA272D;}
+.black{ color:#333;}
+
+.load{position:fixed; background:#000; width:100%; height:100%; z-index:999; filter: alpha(opacity=70); opacity: 0.7;}
+.load img { position:absolute;left:50%;margin-left:-16px;top:50%;margin-top:-16px;}
+.login-top{ height:40px; border-bottom:1px solid #DBDBDB;  text-align:center; color:#333; background:#fff; margin-bottom:10px; line-height:40px;}
+.login-logo{margin:0 auto; height:60px; width:162px; padding-top:10px;}
+
+.successbg{ width:100%; height:100px;  margin:0 auto; padding-top:20px; color:black; text-align:center; font-size:16px;}
+.fail{ width:100%; height:100px;  margin:0 auto; padding-top:20px; color:black;  text-align:center; font-size:16px;}
+
+.listtitle{ border-bottom:2px solid #812C31;}
+
+.topbar{width:100%;display:block; background: url(../toplogo.png) #BC282E no-repeat center; height: 48px;}
+.topbar a{ display:block; height:48px; width:58px;}
+.back{ float:left; background:url(../back.png) no-repeat;}
+.home{ float:right;  background:url(../home.png) no-repeat;}
+
+.red_dot{ background:url(../images/red_dot.png) no-repeat; color:#fff; width:22px; height:22px; line-height:22px; text-align:center;}
+.red_dot_line{ background:url(../images/red_dot_line2.png) repeat-y; height:60px; width:22px;}
+.red_txt{ color:#D10505;}
+
+.grey_dot{ background:url(../images/grey_dot.png) no-repeat; color:#666; width:22px; height:22px; line-height:22px; text-align:center;}
+.grey_dot_line{ background:url(../images/grey_dot_line2.png) repeat-y; height:60px; width:22px;}
+.grey_txt{ color:#999;}
+
+.flowtable {width:100%;border:0;cellspacing:0;cellpadding:0;margin-left:120px;}
+.flowtable td{font-size:14px;}

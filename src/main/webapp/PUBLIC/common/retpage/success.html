@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html manifest="">
+<head>
+<meta charset="utf-8">
+<title>利安人寿</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/custom.css">
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script>
+	$(function() {
+		$("#retMsg").html(sessionStorage.getItem("_retMsg"));
+		sessionStorage.removeItem("_retMsg");//读取后清除
+	})
+</script>
+</head>
+<body style="background: #F4F4F4;">
+<IfWebModule>
+	<div class="topbar">
+		<a onclick="goBack();return false;" class="back"   href="#" ></a>
+		<a onclick="location.href='../../Home/index.html?random'+Math.random();" class="home" ></a>
+	</div>
+</IfWebModule>
+
+	<div class="container">
+		<div class="successbg">操作成功!<br /> 
+		<span id="retMsg"></span>
+		</div>
+		<div
+			style="height: 250px; width: 100%; background: url(../messbg2.jpg) center no-repeat; background-size: contain; margin: 0 auto;"></div>
+	</div>
+</body>
+
+<IfWebModule> 
+	<script src="../js/stickUp.min.js"></script> 
+	<script src="../js/topBar.js">></script> 
+</IfWebModule>
+
+</html>

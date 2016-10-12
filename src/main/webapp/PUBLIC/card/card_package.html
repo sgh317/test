@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/sm.min.css">
+    <!-- <link rel="stylesheet" href="css/sm.css"> -->
+    <link rel="stylesheet" href="css/sm-extend.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="css/ddcx.css?v=1.0" />
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    
+    
+    <script type="text/javascript">
+    function isDate(dateString){
+        if(dateString.trim()=="")return true;
+        var r=dateString.match(/^(\d{1,4})(\d{1,2})(\d{1,2})$/); 
+        if(r==null){
+          return false;
+        }
+        var vDate = new Date(r[1] + "/" + r[2] + "/" + r[3]);
+    	var bGoodDay;
+    	bGoodDay = (vDate.getFullYear() == Number(r[1])) && ((vDate.getMonth() + 1) == r[2]) && (vDate.getDate() == Number(r[3]));
+    	if (!bGoodDay) {
+    		return false;
+    	}
+        return true;
+     }
+    
+    function isDateAfter(dateString){
+    	var r=dateString.match(/^(\d{1,4})(\d{1,2})(\d{1,2})$/); 
+    	var vDate = new Date(r[1] + "/" + r[2] + "/" + r[3]);
+    	
+    	var today = new Date();
+    	
+    	if(today<vDate){
+    		return false;
+    	}
+    	return true;
+    }
+    
+    var packageType = 'normal';
+    var currenUrl=location.href.split('#')[0];  	
+     $(function(){
+    	DIALOG.loading();
+    	
+    	$("#normalPackage").css('border-color', 'red');
+        $("#normalPackage").find('.crown-products').show();
+        $("#choosePackage").val('normal');
+    	
+    	RpcContext.getBean('customerJsBean').queryCustomerDetailInfo(
+				{
+					onSucess:function(result)
+				    {
+						var res = eval('('+result+')');
+						
+						try{
+						if(res.flag == 'Y'){
+							DIALOG.close();
+							$("#clientId").val(res.customerDetailInfo.clientId);
+							$("#openId").val(res.customerDetailInfo.openId);
+							$("#carNo").val(res.customerDetailInfo.carNo);
+							$("#carNo").attr("readonly",true);
+							$("#carType").val(res.customerDetailInfo.carType);
+							$("#frameNo").val(res.customerDetailInfo.frameNo);
+							$("#engineNo").val(res.customerDetailInfo.engineNo);
+							$("#clientName").val(res.customerDetailInfo.clientName);
+							$("#clientAddress").val(res.customerDetailInfo.clientIdNo);
+                            $("#loadDate").val(res.customerDetailInfo.loadDate);
+							
+                            if(res.orderInfo!=null&&typeof(res.orderInfo)!="undefined"){
+								$(".query-result,.update").show();
+				                $(".button-green").removeClass("disabled");
+    							
+    							var html = '';
+    							
+    							if(res.carDetailList!=null)
+    								
+    							for(var i=0;i<res.carDetailList.length;i++){
+    								
+    								if(res.carDetailList[i].carSeq == res.orderInfo.carSeq)
+    									html+= "<option value='"+res.carDetailList[i].carSeq+"' selected>"+res.carDetailList[i].carSearial+"("+res.carDetailList[i].remark+" "+res.carDetailList[i].buyPrice+"元)</optin>";
+    								else
+    									html+= "<option value='"+res.carDetailList[i].carSeq+"'>"+res.carDetailList[i].carSearial+"("+res.carDetailList[i].remark+" "+res.carDetailList[i].buyPrice+"元)</optin>";
+    							}
+    							$("#carSeq").html(html);
+    							$("#carSeat").val(res.orderInfo.carSeat);
+    							$("#buyPrice").val(res.orderInfo.buyPrice);
+    							$("#orderId").val(res.orderInfo.orderId);
+    							
+    							$("#effectDate").val(res.basicStartDate);
+    							
+    							refreshPackage();
+							}else{
+								
+								$("#carInfoDiv").hide();
+								
+								if(res.carDetailList!=null)
+    								
+        						for(var i=0;i<res.carDetailList.length;i++){
+        								
+        							html+= "<option value='"+res.carDetailList[i].carSeq+"'>"+res.carDetailList[i].carSearial+"("+res.carDetailList[i].remark+" "+res.carDetailList[i].buyPrice+"元)</optin>";
+        						}
+    							$("#carSeq").html(html);
+    							$("#carSeat").val(res.carDetailList[0].carNum);
+    							$("#buyPrice").val(res.carDetailList[0].buyPrice);
+
+    							$("#effectDate").val(res.basicStartDate);
+							}
+							
+						}else{
+							DIALOG.close();
+							alert(res.message);
+						}
+						}catch(error){
+							DIALOG.close();
+							alert('加载数据异常，请刷新后使用');
+						}
+					 },
+					 onError:function(err)
+					{
+						 DIALOG.close();
+					}
+			});
+    }); 
+    
+    function searchCarInfo(){
+   	 
+     DIALOG.loading();
+     
+   	 setTimeout(function () {
+
+ 			DIALOG.close();
+     	
+            $(".query-result,.update").show();
+            $(".button-green").removeClass("disabled");
+            
+            refreshPackage();
+                        
+        }, 2000);
+   	
+   }
+    
+    function refreshPackage(){
+    	DIALOG.loading();
+    	
+    	var orderId = $("#orderId").val();
+    	var loadDate = $("#loadDate").val();    	
+    	var carClassifyCode = $("#carClassifyCode").val();
+    	var carSeat = $("#carSeat").val();
+    	var buyPrice = $("#buyPrice").val();
+    	
+        var carSeq = $("#carSeq").val();
+        var effectDate = $("#effectDate").val();
+        
+        var errInfo = '';
+        if(effectDate==null||effectDate==''||!isDate(effectDate)){
+        	errInfo += '请正确填写生效日期(如：20160207)/n';
+        }
+        
+        if(loadDate==null||loadDate==''||!isDate(loadDate)){
+        	errInfo += '请正确填写初登日期（如：20160207）/n';
+        }
+        
+        if(errInfo!=null&&errInfo!=''){
+        	alert(errInfo);
+        	return;
+        }
+    	
+    	try{
+    	RpcContext.getBean('customerJsBean').callPackagePrem(orderId,loadDate,carClassifyCode,carSeat,buyPrice,packageType,carSeq,effectDate,
+            	{
+            	onSucess:function(result)
+    		    {
+            		
+            		var res = eval('('+result+')');
+        			if(res.flag == 'Y'){
+        				DIALOG.close();
+                		
+        				$("#basicPremAll").html(res.basicPremAll);
+        				$("#basicPremDiscount").html(res.basicPremDiscount);
+        				$("#basicPremPay").html(res.basicPremPay);
+        				
+        				$("#normalPremAll").html(res.normalPremAll);
+        				$("#normalPremDiscount").html(res.normalPremDiscount);
+        				$("#normalPremPay").html(res.normalPremPay);
+        				
+        				$("#topPremAll").html(res.topPremAll);
+        				$("#topPremDiscount").html(res.topPremDiscount);
+        				$("#topPremPay").html(res.topPremPay);
+        				
+        			}else{
+        				DIALOG.close();
+        				alert(res.message);
+        			}
+    		    },
+    		    onError:function(err)
+    			{
+    		    	DIALOG.close();
+    			    alert(err);
+    			}
+            });
+    	}catch(error){
+    		DIALOG.close();
+    		
+    		alert(error);
+    	}
+    }
+    	
+    function saveOrderInfo(){
+    	
+    	DIALOG.loading();
+    	
+    	//保存车辆信息
+    	var carNo = $("#carNo").val();
+    	var loadDate = $("#loadDate").val();    	
+    	var carClassifyCode = $("#carClassifyCode").val();
+    	var carSeat = $("#carSeat").val();
+    	var buyPrice = $("#buyPrice").val();
+    	var customerId = $("#customerId").val();
+    	var orderId = $("#orderId").val();
+    	var carSeq = $("#carSeq").val();
+    	var effectDate = $("#effectDate").val();
+    	
+    	var errInfo = '';
+        if(effectDate==null||effectDate==''||!isDate(effectDate)){
+        	errInfo += '请正确填写生效日期(如：20160207)/n';
+        }
+        
+        if(loadDate==null||loadDate==''||!isDate(loadDate)){
+        	errInfo += '请正确填写初登日期（如：20160207）/n';
+        }
+        
+        if(errInfo!=null&&errInfo!=''){
+        	alert(errInfo);
+        	return;
+        }
+    	
+    	 
+    	RpcContext.getBean('customerJsBean').saveOrderInfo(orderId,carNo,loadDate,carClassifyCode,customerId,carSeat,buyPrice,carSeq,packageType,effectDate,
+    	{
+    		onSucess:function(result)
+		    {
+    			var res = eval('('+result+')');
+    				
+    			if(res.flag == 'Y'){
+    				DIALOG.close();
+            		
+    				window.location.href = "card_insur.html?random="+Math.random();	
+    			}else{
+    				DIALOG.close();
+    				alert(res.message);
+    			}
+		    },
+		    onError:function(err)
+			{
+		    	DIALOG.close();
+			    alert('保存异常');
+			}
+    	});
+    }
+    
+    function changPackageType(packageId){
+    	packageType = packageId;
+    	//$("#choosePackage").val(package);
+    	
+    	/* if(package=='normal'){
+    		$("#packageTypeDesc").html('');
+    		$("#packageTypeDesc").html('标准套餐');
+    	}else if(packageType=='basic'){
+    		$("#packageTypeDesc").html('');
+    		$("#packageTypeDesc").html('基本套餐');
+    	}else{
+    		$("#packageTypeDesc").html('');
+    		$("#packageTypeDesc").html('豪华套餐');
+    	} */
+    }
+    
+    function changeCarSeq(){
+    	DIALOG.loading();
+    	
+    	var carSeq = $("#carSeq").val();
+    	RpcContext.getBean('customerJsBean').getCarDetail(carSeq,{
+    		onSucess:function(result)
+		    {
+    			var res = eval('('+result+')');
+    				
+    			if(res.flag == 'Y'){
+    				DIALOG.close();
+            		
+    				$("#carSeat").val(res.carDetail.carNum);
+    		    	$("#buyPrice").val(res.carDetail.buyPrice);
+    		    	
+    		    	refreshPackage();
+    			}else{
+    				alert(res.message);
+    			}
+		    },
+		    onError:function(err)
+			{
+		    	DIALOG.close();
+			    alert(err);
+			}
+    	});
+    	
+    }
+    </script>
+    
+</head>
+<body>
+    <div class="page">
+    	<input id="orderId" type="hidden"/>
+		<input id="customerId" type="hidden"/>
+    	<input type="hidden" id="carClassifyCode" value="C1"/>
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title"><i class="icon-car"></i><span>爱车信息</span></h1>
+        </header>
+        <nav class="bar bar-tab bar-button">
+            <a href="#" onclick="saveOrderInfo();" class="button button-fill button-green disabled external">下一步</a>
+        </nav>
+        <div class="content accordion-list step-content">
+            <div class="step-form">
+                <div class="form-style">
+                    <ul>
+                        <li>
+                            <input type="text" id="carNo" class="input-text" placeholder="请输入车牌号" />
+                            <button type="button" class="btnSearch" onClick="searchCarInfo();">一键报价</button>
+                        </li>
+                    </ul>
+                </div>
+                <p class="search-tips">点击查询，填写完整信息后才能下一步哦！</p>
+            </div>
+            <div class="query-result" id="carInfoDiv">
+                <div class="form-style">
+                    <ul>
+                        <li>
+                            <select id="carSeq" class="input-text input-select" onchange="changeCarSeq();">
+                            </select>
+                            <p class="form-tips">(请准确选择车型，避免报价偏差)</p>
+                        </li>
+                        <li class="clearfix">
+                            <div class="inputBox half2" style="float: left;">
+                                <input type="text" class="input-text hasLabel" id="buyPrice" readonly/>
+                                <label class="input-label">购置价：</label>
+                            </div>
+                            <div class="inputBox half2" style="float: right;">
+                                <input type="text" class="input-text hasLabel" id="loadDate" readonly/>
+                                <label class="input-label">初登日期：</label>
+                            </div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="inputBox half2" style="float: left;">
+                                <input type="text" class="input-text hasLabel" id="carSeat" readonly/>
+                                <label class="input-label">座位数：</label>
+                            </div>
+                            <div class="inputBox half2" style="float: right;">
+                                <input type="text" class="input-text hasLabel" value="家庭自用型" readonly/>
+                                <label class="input-label">使用性质：</label>
+                            </div>
+                        </li>
+                        <li>
+                        	<div class="inputBox" style="float: left;">
+                            	<input type="text" id="effectDate" class="input-text hasLabel" placeholder="开始时间" onblur="changeCarSeq();"/>
+                            	<label class="input-label">生效时间：</label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="update" style="padding:0px;">
+                <div class="form-style">
+                    <ul class="taocan-ul">
+                        <li class="clearfix" style="margin-bottom: .3rem;">
+                            <!-- <div class="crown-item">
+                                <div class="crown-info" style="border: none; margin: 0px; height: 0px;" align="right">
+                                    <div class="price-box" style="top: 0px;">
+                                        <span><a style="font-size: 82%; color: #525252; border-bottom: 1px solid #525252;">精准报价</a></span>
+                                        <span><a style="padding: 0px 8px;"> </a></span>
+                                        <span><a style="font-size: 82%; color: #525252; border-bottom: 1px solid #525252;">积分抵扣</a></span>
+                                        <span><a style="padding: 0px 8px;"> </a></span>
+                                        <span><a style="font-size: 82%; color: #525252; border-bottom: 1px solid #525252;">实际支付</a></span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </li>
+                        <li class="clearfix taocan" onclick="changPackageType('basic');">
+                            <div class="crown-item">
+                                <div class="crown-icon">
+                                    <i class="icon-crown-top icon-crown-copper"></i>
+                                    <i class="icon-crown-bg"></i>
+                                    <span class="crown-desc">基本 套餐</span>
+                                </div>
+                                <div class="crown-info" align="right">
+                                    <div class="crown-products">
+                                        交强险、车船税、车损险、商三险（30万）、车上人员（每座1万）、不计免赔<em style="color: #00F500; font-weight: bold;">[险种可自由组合]</em>
+                                    </div>
+                                    <div class="price-box">
+                                        <span><a class="p1" id="basicPremAll"></a>(报)</span>
+                                        <span><a class="op">-</a></span>
+                                        <span><a class="p1" id="basicPremDiscount"></a>(折)</span>
+                                        <span><a class="op">=</a></span>
+                                        <span><a class="p2" id="basicPremPay"></a>(付)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="clearfix taocan" onclick="changPackageType('normal');" id="normalPackage">
+                            <div class="crown-item">
+                                <div class="crown-icon">
+                                    <i class="icon-crown-top icon-crown-silver"></i>
+                                    <i class="icon-crown-bg"></i>
+                                    <span class="crown-desc">全面 套餐</span>
+                                </div>
+                                <div class="crown-info" align="right">
+                                    <div class="crown-products">
+                                        交强险、车船税、车损险、商三险（50万）、车上人员（每座2万）、盗抢险、玻璃险、不计免赔<em style="color: #00F500; font-weight: bold;">[险种可自由组合]</em>
+                                    </div>
+                                    <div class="price-box">
+                                        <span><a class="p1" id="normalPremAll"></a>(报)</span>
+                                        <span><a class="op">-</a></span>
+                                        <span><a class="p1" id="normalPremDiscount"></a>(折)</span>
+                                        <span><a class="op">=</a></span>
+                                        <span><a class="p2" id="normalPremPay"></a>(付)</span>
+                                    </div>
+                                    <div class="seal-icon">
+                                        <span style="">墙裂推荐</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="clearfix taocan" onclick="changPackageType('top');">
+                            <div class="crown-item">
+                                <div class="crown-icon">
+                                    <i class="icon-crown-top icon-crown-gold"></i>
+                                    <i class="icon-crown-bg"></i>
+                                    <span class="crown-desc">豪华 套餐</span>
+                                </div>
+                                <div class="crown-info" align="right">
+                                    <div class="crown-products">
+                                        交强险、车船税、车损险、商三险（100万）、车上人员（每座5万）、盗抢险、玻璃险、自燃险、划痕险(2000)、不计免赔<em style="color: #00F500; font-weight: bold;">[险种可自由组合]</em>
+                                    </div>
+                                    <div class="price-box">
+                                        <span><a class="p1" id="topPremAll"></a>(报)</span>
+                                        <span><a class="op">-</a></span>
+                                        <span><a class="p1" id="topPremDiscount"></a>(折)</span>
+                                        <span><a class="op">=</a></span>
+                                        <span><a class="p2" id="topPremPay"></a>(付)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <div class="form-style">
+                    <span style="color:#eb3d0b; font-family: '幼圆'; font-size: 75%;">*以上报价均包含交通强制保险、车船税及对应险种的不计免赔</span>
+                </div>
+                <div class="form-style">
+                    <img src="img/bottom.png" width="100%"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='js/sm-extend.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='js/commonUtil.js' charset='utf-8'></script>
+    <script type="text/javascript">
+        $(function() {
+            //$.init();
+            /* $(".btnSearch").bind("click",function(){
+                var _this = $(this);
+                //$.showPreloader();
+                setTimeout(function () {
+                    //$.hidePreloader();
+                    _this.parents(".form-style").siblings(".search-tips").hide();
+                    $(".query-result,.update").show();
+                    $(".button-green").removeClass("disabled");
+                }, 2000);
+            }); */
+
+            $(".taocan").bind("click", function(){
+                // $(".taocan").css('background-color','');
+                $(".taocan").css('border-color', 'transparent');
+                $(".taocan").find('.crown-products').hide();
+
+                //$(this).css('background-color','#EBC8BE');
+                $(this).css('border-color', 'red');
+                $(this).find('.crown-products').show();
+            });
+
+            // TODO:
+            //$(".btnSearch").click();
+        });
+    </script>
+</body>
+</html>

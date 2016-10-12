@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>WGQC</display-name>
+	
+	<filter>
+			<filter-name>encodingFilter</filter-name>
+			<filter-class>
+				org.springframework.web.filter.CharacterEncodingFilter
+			</filter-class>
+			<init-param>
+				<param-name>encoding</param-name>
+				<param-value>UTF-8</param-value>
+			</init-param>
+	</filter>
+	<filter-mapping>
+			<filter-name>encodingFilter</filter-name>
+			<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<filter>
+			<filter-name>PlatformFilter</filter-name>
+			<filter-class>
+				com.rayuniverse.framework.PlatformFilter
+			</filter-class>
+	</filter>
+	<filter-mapping>
+			<filter-name>PlatformFilter</filter-name>
+			<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<filter>
+			<filter-name>LoginFilter</filter-name>
+			<filter-class>
+				com.rayuniverse.framework.login.LoginFilter
+			</filter-class>
+	</filter>
+	<filter-mapping>
+			<filter-name>LoginFilter</filter-name>
+			<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<filter>
+			<filter-name>JsonRpcFilter</filter-name>
+			<filter-class>
+				com.rayuniverse.framework.jsrpc.JsonRpcFilter
+			</filter-class>
+	</filter>
+	<filter-mapping>
+			<filter-name>JsonRpcFilter</filter-name>
+			<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<servlet>
+		<servlet-name>KaptchaServlet</servlet-name>
+		<servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>
+		<init-param>
+			<param-name>kaptcha.border</param-name>
+			<param-value>no</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.border.color</param-name>
+			<param-value>105,179,90</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.textproducer.font.color</param-name>
+			<param-value>red</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.image.width</param-name>
+			<param-value>200</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.image.height</param-name>
+			<param-value>48</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.textproducer.font.size</param-name>
+			<param-value>48</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.textproducer.char.length</param-name>
+			<param-value>4</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.textproducer.font.names</param-name>
+			<param-value>宋体,楷体,微软雅黑</param-value>
+		</init-param>
+		<init-param>
+			<param-name>kaptcha.textproducer.char.string</param-name>
+			<param-value>abcde2345678gfynmnpwxABCDEFGHJKLMNPSTWXY</param-value>
+		</init-param>		
+		
+    </servlet>  
+	<servlet-mapping>
+	<servlet-name>KaptchaServlet</servlet-name>
+		<url-pattern>/PUBLIC/kaptcha.jpg</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>WXGatewayServlet</servlet-name>
+		<servlet-class>com.rayuniverse.wchat.gw.WXGatewayServlet</servlet-class>
+    </servlet>  
+	<servlet-mapping>
+	<servlet-name>WXGatewayServlet</servlet-name>
+		<url-pattern>/PUBLIC/WXGatewayServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>WXRedirectServlet</servlet-name>
+		<servlet-class>com.rayuniverse.login.WXRedirectServlet</servlet-class>
+    </servlet>  
+	<servlet-mapping>
+	<servlet-name>WXRedirectServlet</servlet-name>
+		<url-pattern>/PUBLIC/WXRedirectServlet</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	
+	
+	<servlet>
+		<servlet-name>App</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/AppContext.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>App</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+</web-app>

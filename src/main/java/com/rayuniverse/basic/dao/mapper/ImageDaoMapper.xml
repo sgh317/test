@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.basic.dao.ImageDao">
+
+	<insert id="insertOrderImages" parameterType="java.util.HashMap">
+	insert into order_image_info(image_id,image_url,image_type,order_id,image_status)
+						   values(#{serviceId,jdbcType=VARCHAR},
+						          #{url,jdbcType=VARCHAR},
+						          #{imageType,jdbcType=VARCHAR},
+						          #{orderId,jdbcType=VARCHAR},
+						          #{imageStatus,jdbcType=VARCHAR})
+						          
+	</insert>
+                              
+</mapper>

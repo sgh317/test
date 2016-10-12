@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="../main/css/sm.css">
+    <link rel="stylesheet" href="../main/css/sm.min.css">
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+    
+    <!-- 
+    <link rel="stylesheet" href="../WGQC/css/sm.min.css">
+    <link rel="stylesheet" href="../WGQC/css/sm-extend.min.css">
+    <link rel="stylesheet" href="../WGQC/css/ddcx.css?v=1.0" />
+    -->
+    
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    <script type="text/javascript" src="./../Stub/WxImageJsBean.js"></script>
+    <script type="text/javascript" src="./../Stub/basicImageJSBean.js"></script>
+    <script type="text/javascript" src="./../Stub/WXPaySrv.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    
+    <script type="text/javascript">
+    var aCity = {11 : "北京", 12 : "天津", 13 : "河北", 14 : "山西", 15 : "内蒙古", 21 : "辽宁", 22 : "吉林", 23 : "黑龙江", 31 : "上海",
+			 32 : "江苏", 33 : "浙江", 34 : "安徽", 35 : "福建", 36 : "江西", 37 : "山东", 41 : "河南", 42 : "湖北 ", 43 : "湖南",
+			 44 : "广东", 45 : "广西", 46 : "海南", 50 : "重庆", 51 : "四川", 52 : "贵州", 53 : "云南", 54 : "西藏", 61 : "陕西",
+			 62 : "甘肃", 63 : "青海", 64 : "宁夏", 65 : "新疆", 71 : "台湾", 81 : "香港", 82 : "澳门", 91 : "国外" };
+    
+    function isDate(dateString){
+        if(dateString.trim()=="")return true;
+        var r=dateString.match(/^(\d{1,4})(\d{1,2})(\d{1,2})$/); 
+        if(r==null){
+          return false;
+        }
+        var vDate = new Date(r[1] + "/" + r[2] + "/" + r[3]);
+    	var bGoodDay;
+    	bGoodDay = (vDate.getFullYear() == Number(r[1])) && ((vDate.getMonth() + 1) == r[2]) && (vDate.getDate() == Number(r[3]));
+    	if (!bGoodDay) {
+    		return false;
+    	}
+        return true;
+     }
+    
+    function isDateBefore(dateString){
+    	var r=dateString.match(/^(\d{1,4})(\d{1,2})(\d{1,2})$/); 
+    	var vDate = new Date(r[1] + "/" + r[2] + "/" + r[3]);
+    	
+    	var today = new Date();
+    	
+    	if(today<vDate){
+    		return false;
+    	}
+    	return true;
+    }
+    
+    
+    function validateId(value){
+    	var re = new RegExp(/^(\d{2})(\d{4})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
+    	var arrSplit = value.match(re);    	
+    	
+    	if (arrSplit == null || this.aCity[parseInt(arrSplit[1])] == null) {
+    		return false;
+    	}
+    	
+    	var valnum;
+		var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+		var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+		var nTemp = 0, i;
+		for (i = 0; i < 17; i++) {
+			nTemp += value.substr(i, 1) * arrInt[i];
+		}
+		valnum = arrCh[nTemp % 11];
+		if (valnum != value.substr(17, 1)) {
+			// alert('18位身份证的校验码不正确！末位应为：' + valnum);
+			return false;
+		}
+		
+		return true;
+    }
+    
+    
+    $(function(){
+    	DIALOG.loading();
+    	$("#wxDiv").show();
+    	$("#xianchangDiv").hide();
+    	$("#xianchangTips").hide();
+    	$("#shangmenDiv").hide();
+    	$("#shangmenTips").hide();
+    	
+    	RpcContext.getBean('customerJsBean').loadOrderReviewInfo(
+    	{
+			onSucess:function(result)
+			{			
+				var res = eval('('+result+')');
+				
+				if(res.flag == 'Y'){
+					DIALOG.close();
+					if(res.isFollowHYX == 'Y'){
+						$("#applicantName").attr('value',res.customerInfo.clientName);
+						$("#applicantIdNo").attr('value',res.customerInfo.clientIdNo);	
+					}
+					
+					$("#totalFee").val(res.payAmount);
+					$("#sum").html("￥"+res.payAmount);
+					$("#suifei").html("￥"+res.taxAmount);
+					$("#jqx").html("￥"+res.jqAmount);
+					$("#syx").html("￥"+res.syAmount);
+					$("#dkAmount").html("￥ -"+res.dkAmount)
+					
+					$("#orderId").attr('value',res.orderInfo.orderId);
+					
+					var orderType  = res.orderInfo.orderType;
+					$("#orderType").attr('value',orderType);
+					
+					if(orderType == '01'){
+						$("#J_wechart").attr("checked", true);
+						$("#J_xianchang").removeAttr("checked");
+						$("#J_shangmen").removeAttr("checked");
+					}else if(orderType == '02'){
+						$("#J_xianchang").attr("checked", true);
+						$("#J_wechart").removeAttr("checked");
+						$("#J_shangmen").removeAttr("checked");
+					}else if(orderType == '03'){
+						$("#J_shangmen").attr("checked", true);
+						$("#J_wechart").removeAttr("checked");
+						$("#J_shangmen").removeAttr("checked");
+					}else{
+						$("#J_wechart").attr("checked", true);
+						$("#J_xianchang").removeAttr("checked");
+						$("#J_shangmen").removeAttr("checked");
+					}
+				}else{
+					
+					$("#orderType").attr('value','01');
+					$("#J_wechart").attr("checked", true);
+					$("#J_xianchang").removeAttr("checked");
+					$("#J_shangmen").removeAttr("checked");
+					
+					DIALOG.close();
+				}
+				
+				refreshAreaInfo();
+			},
+			 onError:function(err)
+			{
+				DIALOG.close();
+ 				alert('加载数据异常');
+			}
+    	});
+    	
+    	var currenUrl=location.href.split('#')[0]; 
+    	RpcContext.getBean('WxImageJsBean').getWXConfigData(encodeURI(currenUrl),{
+    		onSucess:function(result)
+    		{
+    			
+    			if(result.signature){
+        			try{
+        				wx.config({
+        					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        					appId: result.appId, // 必填，公众号的唯一标识
+        					timestamp: result.timestamp, // 必填，生成签名的时间戳
+        					nonceStr: result.nonceStr, // 必填，生成签名的随机串
+        					signature: result.signature,// 必填，签名
+        					jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','hideOptionMenu','showOptionMenu','hideMenuItems','closeWindow','chooseWXPay', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage']  // 必填，需要使用的JS接口列表
+        				});
+        				
+        				
+        			}catch(e){
+        				
+        				alert(e);
+        			}			
+        		}else
+        		{
+        			sessionStorage.setItem("_retMsg","系统错误！");
+					window.location.replace("./../common/retpage/fail.html?random="+Math.random());
+        		}
+    		},
+    		onError:function(err)
+	        {
+	        	sessionStorage.setItem("_retMsg","系统错误！");
+				window.location.replace("./../common/retpage/fail.html?random="+Math.random());
+	        }
+    	});
+    });
+    
+    function refreshAreaInfo(){
+    	DIALOG.loading();
+    	var city = $("#city").val();
+    	$("#area").html();
+    	RpcContext.getBean('customerJsBean').refreshAreaInfo(city,
+    	{
+    		onSucess:function(result)
+			{
+    		   var res = eval('('+result+')');
+    		   
+    		   if(res.flag == 'Y'){
+    			    DIALOG.close();
+    			    var res = eval('('+result+')');
+       	    		var html = '';
+       	    	
+       	    		for(var i=0;i<res.areaList.length;i++){
+       	    		
+       	    			html += "<option  id='"+res.areaList[i].areaCode+"' value='"+res.areaList[i].areaCode+"'>"+res.areaList[i].areaDesc+"</option>";
+       	    		}
+       	    		$("#area").html(html);
+       	    		refreshNetInfo();
+    		   }else{
+    			   DIALOG.close();
+    		   }
+    		   
+    		   
+			}, onError:function(err)
+			{
+				DIALOG.close();
+ 				alert('刷新数据异常');
+			}
+    	});
+    }
+    
+    function refreshNetInfo(){
+    	DIALOG.loading();
+    	var area = $("#area").val();
+    	$("#net").html();
+    	RpcContext.getBean('customerJsBean').refreshNetInfo(area,
+    	{
+    	 	onSucess:function(result)
+    		{
+    	 		DIALOG.close();
+    	    	var res = eval('('+result+')');
+    	    	var html = '';
+    	    	
+    	    	for(var i=0;i<res.netList.length;i++){
+    	    		
+    	    		html += "<option hiddenInfo='"+res.netList[i].netAddress+"' id='netCode"+res.netList[i].netCode+"' value='"+res.netList[i].netCode+"'>"+res.netList[i].netName+"</option>";
+    	    	}
+    	    	$("#net").html(html);
+    	    	refreshNetAddress();
+    	    	
+    		}, onError:function(err)
+    		{
+    		   DIALOG.close();
+    	 	   alert(err);
+    		}
+		});
+    }
+    
+    function refreshNetAddress(){
+    	var net = $("#net").val();
+    	
+    	$("#netAddress").html($("#netCode"+net).attr('hiddenInfo'));
+    	
+    }
+    
+    function checkOrderType(orderType){
+    	
+    	if(orderType == '02'){
+    		$("#wechartTip").hide();
+    		$("#clientAddress01").hide();
+    		
+    		$("#shangmenDiv").hide();
+        	$("#shangmenTips").hide();
+    		
+    		$("#xianchangDiv").show();
+    		$("#xianchangTips").show();
+    	}else if(orderType == '01'){
+    		$("#wechartTip").show();
+    		$("#clientAddress01").show();
+    		
+    		$("#xianchangDiv").hide();
+    		$("#xianchangTips").hide();
+    		
+    		$("#shangmenDiv").hide();
+    		$("#shangmenTips").hide();
+    	}else{
+    		$("#wechartTip").hide();
+    		$("#clientAddress01").hide();
+    		
+    		$("#xianchangDiv").hide();
+    		$("#xianchangTips").hide();
+    		
+    		$("#shangmenDiv").show();
+    		$("#shangmenTips").show();
+    	}
+    	
+    	$("#orderType").attr('value',orderType);
+    	
+    }
+    
+    function submitOrderInfo(){
+    	var errMsg = '';
+    	
+    	DIALOG.loading();
+    	var orderId = $("#orderId").val();
+    	var orderType = $("#orderType").val();
+    	if(orderType==null||orderType=='')
+    		orderType = '01';
+    	
+    	var applicantName = $("#applicantName").val();
+    	var applicantIdNo = $("#applicantIdNo").val();
+    	var city = $("#city").val();
+    	var area = $("#area").val();
+    	var netcode = $("#net").val();
+    	var visitDate02 = $("#visitDate02").val();
+    	var visitHour02 = $("#visitHour02").val();
+    	var clientAddress01 = $("#clientAddress01").val();
+    	
+    	var visitDate03 = $("#visitDate03").val();
+    	var visitHour03 = $("#visitHour03").val();
+    	var clientAddress03 = $("#clientAddress03").val();
+    	
+    	if(orderType=='01'){
+    		if(clientAddress01==null||clientAddress01.trim()=='')
+    			errMsg += '您选择了微信支付，但是没有选择保单递送地址\n';
+    	}else if(orderType=='02'){
+  			if(visitDate02==null || visitDate02.trim() == ''||!isDate(visitDate02)){
+  				
+  				errMsg += '您选择了到门店支付但是未填写合法的上门日期(如：20160207)\n';
+  			}else{
+  				if(isDateBefore(visitDate02))
+  					errMsg += '您需选择当前时间后的时间\n';
+  			}
+  			if(visitHour02==null || visitHour02.trim() == '')
+  				errMsg += '您选择了到门店支付但是未指定上门时间\n';  			
+  			
+  		}else if(orderType == '03'){
+  			
+  			if(visitDate03==null || visitDate03.trim() == '' ||!isDate(visitDate03)){
+  				
+  				errMsg += '您选择了上门收取保费但是未填写合法的上门日期(如：20160207)\n';
+  			}else{
+  				if(isDateBefore(visitDate03))
+  					errMsg += '您需选择当前时间后的时间\n';
+  			}
+  				
+  			if(visitHour03==null || visitHour03.trim() == '')
+  				errMsg += '您选择了上门收取保费但是未指定上门时间\n';
+  			if(clientAddress03==null||clientAddress03.trim()=='')
+    			errMsg += '您选择了上门收取，但是没有选择上门地址\n';
+  		}
+    	
+    	var imageXSZ_id = '';
+    	var imageSFZ_id = '';
+    	var imageJSZ_id = '';
+    	$("img[class='imageXSZ']").each(function(){
+    		imageXSZ_id += this.id+'|';
+    	});
+    	$("img[class='imageSFZ']").each(function(){
+    		imageSFZ_id += this.id+'|';
+    	});
+    	$("img[class='imageJSZ']").each(function(){
+    		imageJSZ_id += this.id+'|';
+    	});
+    	
+    	if(applicantName==null||applicantName=='')
+    		errMsg += '您未填写投保人姓名\n';
+    	
+    	if(applicantIdNo==null||applicantIdNo==''||!validateId(applicantIdNo)){
+    		errMsg += '您填写的投保人身份证号有误\n';
+    	}
+    	
+    	if(imageXSZ_id=='')
+    		errMsg += '您未上传行驶证资料\n';
+    	
+    	if(imageSFZ_id==''&&imageJSZ_id==''){
+    		errMsg += '您未上传驾驶证或身份证\n';
+    	}
+    	
+    	if(errMsg!=''){
+    		alert(errMsg);
+    		return;
+    	} 
+    	
+    	try{
+    	RpcContext.getBean('customerJsBean').submitOrderInfo(orderId,city,area,netcode,orderType,visitDate02,visitHour02,
+    			clientAddress01,visitDate03,visitHour03,clientAddress03,applicantName,applicantIdNo,
+    	{
+    		onSucess:function(result)
+    		{
+    	    	var res = eval('('+result+')');
+    	    	
+    	    	if(res.flag == 'Y'){
+    	    		
+    	    		if(orderType == '01'){
+    	    			
+    	    			jsApiCall();
+    	    		}else{
+    	    			alert('订单提交成功');
+    	    			
+    	    			window.location.href = "../BIND/result_success.html";
+    	    		}
+    	    		
+    	    	}else{
+    	    		alert('保存失败');
+    	    	}
+    	    	
+    		}, onError:function(err)
+    		{
+    		   DIALOG.close();
+    	 	   alert('提交异常');
+    		}
+    	});
+    	}catch(error1){
+    		alert(error1);
+    	}
+    }
+    
+  //调用微信JS api 支付
+    function jsApiCall()
+    {			
+	    var omAmount = $("#totalFee").val(); 
+    	var omOrderId = $("#orderId").val();
+    	DIALOG.loading();
+    	try{
+    	RpcContext.getBean('WXPaySrv').getParams(omOrderId,omAmount,'车险支付',{
+        	onSucess:function(result)
+            {
+        		var res = eval('('+result+')');
+        		try{
+        			WeixinJSBridge.invoke(
+            		    	'getBrandWCPayRequest',
+            		    	{
+            		        	"appId": res.appId,     //公众号名称，由商户传入      res.appId
+            		        	"timeStamp":res.timeStamp,         //时间戳，自1970年以来的秒数     res.timeStamp
+            		        	"nonceStr": res.nonceStr, //随机串     res.nonceStr
+            		        	"package":res.package,     //res.package
+            		        	"signType":"MD5",         //微信签名方式：     
+            		        	"paySign":res.paySign//微信签名 res.paySign
+            		    	},
+            		    	function (res1){
+            		    		if(res1.err_msg == "get_brand_wcpay_request:ok" ) {
+            		    			
+            		    			try{
+            		    			RpcContext.getBean('customerJsBean').paySuccess(omOrderId,{
+            		    				onSucess:function(resPaySuccess){
+            		    					var resPay = eval('('+resPaySuccess+')');
+            		    					
+            		    					if(resPay.flag == 'Y'){
+            		    						window.location.href = "../BIND/result_success.html";
+            		    					}else{
+            		    						alert('支付成功，更新状态失败，请联系工作人员处理,联系电话4009-500-888');
+            		    					}
+            		    					
+            		    				}
+            		    			});
+            		    			}catch(error01){
+            		    				alert(error01);
+            		    			}
+            		    			
+            		    			
+            		    		}else{
+            		    			alert('支付失败.');
+            		    		}
+            		    		DIALOG.close();
+            		        }
+            		    );
+        			
+        			/*  wx.chooseWXPay({
+        				timestamp: res.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                        nonceStr: res.nonceStr, // 支付签名随机串，不长于 32 位
+                        package: res.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                        signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                        paySign: res.paySign, // 支付签名
+                        complete: function (resinfo) {
+                       		DIALOG.close();
+                            	
+                            // 支付成功后的回调函数
+                            alert('123123123');
+                            alert(resinfo.errMsg);
+                            }
+                        });  */
+        		}catch(errors){
+        			alert(errors);
+        		}
+        		
+                
+               },
+               onError:function(err)
+               {
+            	   DIALOG.closeLoader();
+            	}
+           });
+    	}catch(err){
+    		alert(err);
+    	}
+    }
+  
+    function callpay()
+    {
+        if (typeof WeixinJSBridge == "undefined")
+        {
+            if (document.addEventListener)
+            {
+                document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+            }
+            else if (document.attachEvent)
+            {
+               document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+               document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+            }                     
+        }
+        else
+        {
+            jsApiCall();
+        }
+    }
+    
+    function uploadImage(imageTypeId,parentDiv,imageType,i,localIds)
+    {
+    	 wx.uploadImage({
+    		  
+	            localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
+	            isShowProgressTips: 1, // 默认为1，显示进度提示
+	            success: function (res) {
+	            	
+	                var serverId = res.serverId; // 返回图片的服务器端ID
+
+	                var paramterList=[];
+	                paramterList[0]={
+	                		serverId:serverId,
+	                		attributes:{
+	                			imageTypeId:imageTypeId //
+	                		}
+	                };
+	                
+	                RpcContext.getBean('WxImageJsBean').uploadClaimImages(paramterList,{
+	                	onSucess:function(rt){
+	                	     $(parentDiv+"_ADD").before("<li><img class='"+imageType+"'   id='"+serverId+"' src='"+rt[0].url+"'  onclick=\"previewImage('"+rt[0].url+"','"+parentDiv+"')\"/> <i class=\"delete\"></i></li>");
+	                	     
+	                	     //保存影像数据
+	                	     var orderId = $("#orderId").val();
+	                	     if(orderId==null || orderId==''){
+	                	    	 alert('未获取到订单号，无法上传影像');
+	                	     }else{
+	                	    	 RpcContext.getBean('basicImageJSBean').uploadOrderImages(orderId,serverId,rt[0].url,imageType,{
+	                	    		 onSucess:function(result){
+	                	    			 
+	                	    		 },
+	                	    		 onError:function(error){
+	         	                		alert(error);
+	         	                	}
+	                	    	 });
+	                	     }
+	                	    	 
+	                	     	                	     
+	                		 if(i==(localIds.length-1))
+	                		 {
+	                			 
+	                		 }else
+	                		 {
+	                			 uploadImage(imageTypeId,parentDiv,imageType,i+1,localIds)
+	                		 }
+	                	},
+	                	onError:function(err){
+	                		alert(err);
+	                	}
+	                });
+	            }
+	        });
+    }
+    
+    function chooseImage(imageTypeId,parentDiv,imageType){
+    	wx.chooseImage({
+		    count: 9, // 默认9
+		    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+		    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+		    success: function (res) {
+		    	var localIds =[];
+		        localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+		        uploadImage(imageTypeId,parentDiv,imageType,0,localIds);
+		    }
+		});
+    }
+		
+		
+    function previewImage(param,parentDiv){        	
+    	var size = $(parentDiv).children("li").size();
+    	var UrlArray = [];        
+    	for(var beg = 0;beg < size-1;beg++){        		
+    		UrlArray[beg]  = $(parentDiv).children("li:eq(" + beg + ")").children("img").attr("src");
+    	}
+    	wx.previewImage({
+			    current: param ,// 当前显示图片的http链接
+			   	urls: UrlArray
+			});
+    }        
+    
+    </script>
+</head>
+<body>
+    <div class="page">
+    	<input type="hidden" id="totalFee"/>
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title"><i class="icon-user"></i><span>客户信息确认</span></h1>
+        </header>
+        <nav class="bar bar-tab bar-button">
+            <a href="#" onclick="submitOrderInfo();" class="button button-fill button-green external">确定下单</a>
+        </nav>
+        <div class="content accordion-list">
+            <div class="content-title">投保险人姓名及身份证号码</div>
+            <div class="step-form text-content">
+                <div class="form-style">
+                    <ul>
+                        <li>
+                        	<input type="hidden" id="orderId"/>
+                            <input type="text" class="input-text" placeholder="姓名" id="applicantName"/>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text" placeholder="身份证号" id="applicantIdNo"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="carInfoDiv">
+             	<ul>
+            	   	<li>
+                        <div class="input-upload">
+                      	<label>行驶证照上传（必填）</label>
+                      	<ul class="clearfix" id="IDImage">
+                    		<li class="icon-add" id="IDImage_ADD" onclick="chooseImage('XSZ','#IDImage','imageXSZ');">
+                      		</li>                      		
+                      	</ul>
+                      	</div>
+                     </li>
+                     <li>
+                        <div class="input-upload">
+                      	<label>驾驶证快照上传</label>
+                      	<ul class="clearfix" id="IDImage2">
+                    		<li class="icon-add" id="IDImage2_ADD" onclick="chooseImage('JSZ','#IDImage2','imageJSZ');">
+                      		</li>                      		
+                      	</ul>
+                      	</div>
+                     </li>
+                     <li>
+                        <div class="input-upload">
+                      	<label>身份证快照上传</label>
+                      	<ul class="clearfix" id="IDImage3">
+                    		<li class="icon-add" id="IDImage3_ADD" onclick="chooseImage('SFZ','#IDImage3','imageSFZ');">
+                      		</li>                      		
+                      	</ul>
+                      	</div>
+                     </li>
+                </ul>
+           		</div>
+            <div class="content-title">支付金额</div>
+            <div class="step-form text-content">
+                <div class="form-style list-style">
+                    <ul>
+                    	<li>
+                    		<span class="text-item">税&nbsp;&nbsp;&nbsp;&nbsp;费：<em id="suifei" style="float:right;"></em></span>
+                		</li>
+                		<li>
+                    		<span class="text-item">交强险：<em id="jqx" style="float:right;"></em></span>
+                		</li>
+                		<li>
+                    		<span class="text-item">商业险：<em id="syx" style="float:right;"></em></span>
+                		</li>
+                		<li>
+                			<span class="text-item">抵&nbsp;&nbsp;&nbsp;&nbsp;扣：<em id="dkAmount" style="color:red;float:right;"></em></span>
+                		</li>
+                        <li>
+                            <span class="text-item">总&nbsp;&nbsp;&nbsp;&nbsp;计:<span id="sum" style="float:right;"></span></span>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class="content-title">请选择支付方式</div>
+            <div class="step-form text-content">
+                <div class="form-style pay-style">
+                    <ul>
+                        <li id="wxDiv">
+                            <div class="input-radio">
+                                <input id="J_wechart" name="pay-style" type="radio" onclick="checkOrderType('01');"/>
+                                <label for="J_wechart">微信支付</label>
+                            </div>
+                            <!-- 
+                            <div class="orange-tips" id="wechartTip">
+                                	微信支付，商业保险立减50元！
+                            </div>
+                             -->
+                            <input type="text" id="clientAddress01" class="input-text" placeholder="保单递送地址"/>
+                        </li>
+                        <li>
+                            <div class="input-radio">
+                                <input id="J_xianchang" name="pay-style" type="radio" onclick="checkOrderType('02');"/>
+                                <label for="J_xianchang">至大地网点现场支付</label>
+                            </div>
+                            <div class="orange-tips" id="xianchangTips">
+                                	请选择大地服务网点
+                            </div>
+                        </li>
+                        <li id="xianchangDiv">
+                            <div>
+                            	<select id="city" onchange="refreshAreaInfo();" class="input-select" style="width:30%;">
+                            		<option value="320100">南京市</option>
+                            		<!-- 
+                            		<option value="320500">苏州市</option>
+                            		<option value="320200">无锡市</option>
+  									<option value="320400">常州市</option>
+  									<option value="321200">泰州市</option>	
+									<option value="321000">扬州市</option>
+									<option value="320800">淮安市</option>
+									<option value="320600">南通市</option>
+									<option value="320300">徐州市</option>
+									<option value="320900">盐城市</option>
+									<option value="321100">镇江市</option>
+									<option value="321300">宿迁市</option>
+									<option value="320700">连云港市</option> -->
+                            	</select>
+                            	<br/>
+                            	<select id="area" onchange="refreshNetInfo();" class="input-select" style="width:60%;">
+                            	</select>
+                            	<br/>
+                            	<select id="net" onchange="refreshNetAddress();" class="input-select" style="width:100%;">
+                            	</select>
+                            	<br/>
+                            	<label id="netAddress" style="width:100%;border-width:0px;" class="input-select"></label>
+                            	
+                            	<input type="text" id="visitDate02" class="input-text" style="50%;" placeholder="预约时间 YYYYMMDD 如：20151120"/>
+                            	<select id="visitHour02" class="input-select" style="30%">
+                            		<option value="8">8点-10点</option>
+                            		<option value="10">10点-12点</option>
+                            		<option value="12">12点-14点</option>
+                            		<option value="14">14点-16点</option>
+                            		<option value="16">16点-18点</option>
+                            	</select>   
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-radio">
+                                <input id="J_shangmen" name="pay-style" type="radio" onclick="checkOrderType('03');"/>
+                                <label for="J_shangmen">预约服务人员上门收费及派送保单</label>
+                            </div>
+                            <input type="hidden" id="orderType"/>
+                        </li>
+                        <li id="shangmenTips">
+                        	<div class="orange-tips" >
+                                	请选择上门收取时间
+                            </div>
+                        </li>
+                        <li id="shangmenDiv">
+                            <div>
+                            	<input type="text" id="clientAddress03" class="input-text" placeholder="请输入上门地址"/>
+                            	<br/>
+                            	<input type="text" id="visitDate03" class="input-text" style="50%;" placeholder="预约时间 YYYYMMDD 如：20151120"/>
+                            	<br/>
+                            	<select id="visitHour03" class="input-select" style="30%">
+                            		<option  value="8">8点-10点</option>
+                            		<option  value="10">10点-12点</option>
+                            		<option  value="12">12点-14点</option>
+                            		<option  value="14">14点-16点</option>
+                            		<option  value="16">16点-18点</option>
+                            	</select>  
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../main/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../main/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../main/js/sm-extend.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='js/commonUtil.js' charset='utf-8'></script>
+    
+    <!-- 
+    <script type="text/javascript" src="../WGQC/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../WGQC/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../WGQC/js/sm-extend.min.js' charset='utf-8'></script>
+     -->
+    <script type="text/javascript">
+        /* $(function() {
+            //$.init();
+            $("#J_person_card").picker({
+                toolbarTemplate: '<header class="bar bar-nav">\
+  <button class="button button-link pull-left">按钮</button>\
+  <button class="button button-link pull-right close-picker">确定</button>\
+  <h1 class="title">请选择你的证件类型</h1>\
+  </header>',
+                cols: [
+                    {
+                        textAlign: 'center',
+                        values: ['身份证', '户口本', '军官证']
+                    }
+                ]
+            });
+        }); */
+    </script>
+</body>
+</html>

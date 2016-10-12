@@ -1,0 +1,223 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.order.dao.OrderDao">
+
+	<select id="querySum" resultType="java.util.HashMap">
+		<![CDATA[
+		  select ifnull(sum(wo.sum_pay),0) sumpay, ifnull(count(1),0) sumorder
+		    from WGQC_Order wo where order_type = 'X'
+		]]>
+	</select>
+
+	<select id="querySumRecharge" resultType="java.util.HashMap">
+		<![CDATA[
+			select ifnull(sum(wo.pay_amount),0) sumRecharge
+			  from WGQC_Order wo
+			 where wo.order_type = 'C'
+		]]>
+	</select>
+
+
+	<select id="querySumConsume" resultType="java.util.HashMap">
+		<![CDATA[
+			select ifnull(sum(wo.pay_amount),0) sumConsume
+		  	  from WGQC_Order wo
+		 	 where wo.order_type = 'X'
+		]]>
+	</select>
+
+	<select id="queryRechargeList" resultType="java.util.HashMap">
+		select wm.nickname,
+		       wo.pay_type paytype,
+		       wo.pay_amount payamount,
+		       date_format(wo.pay_time,'%Y-%m-%d %H:%i:%s') paytime
+		  from WGQC_Order wo, WGQC_Member wm
+		 where wo.user_id = wm.user_id
+		   and wo.order_type = 'C'
+		 <if test="clientName != null and  clientName != ''"> 
+		   and wm.nickname like CONCAT('%',#{clientName,jdbcType=VARCHAR},'%')
+		 </if>
+		order by wo.create_time  desc limit  #{startIndex} ,#{pageSize}
+	</select>
+	
+	<select id="queryRechargeTotalPageSize" resultType="java.lang.Integer">
+		select count(1)
+		  from WGQC_Order wo, WGQC_Member wm
+		 where wo.user_id = wm.user_id
+		   and wo.order_type = 'C'
+		 <if test="clientName != null and  clientName != ''"> 
+		   and wm.nickname like CONCAT('%',#{clientName,jdbcType=VARCHAR},'%')
+		 </if>
+	</select>
+
+	<select id="queryConsumeList" resultType="java.util.HashMap">
+		select wm.nickname,
+		       wo.order_num orderNum,
+		       wo.pay_type paytype,
+		       wo.pay_amount payamount,
+		       date_format(wo.pay_time,'%Y-%m-%d %H:%i:%s') paytime
+		  from WGQC_Order wo, WGQC_Member wm
+		 where wo.user_id = wm.user_id
+		   and wo.order_type = 'X'
+		   <if test="clientName != null and  clientName != ''"> 
+		   and wm.nickname like CONCAT('%',#{clientName,jdbcType=VARCHAR},'%')
+		 </if>
+		order by wo.create_time  desc limit  #{startIndex} ,#{pageSize}
+	</select>
+	
+	<select id="queryConsumeTotalPageSize" resultType="java.lang.Integer">
+		select count(1)
+		  from WGQC_Order wo, WGQC_Member wm
+		 where wo.user_id = wm.user_id
+		   and wo.order_type = 'X'
+		   <if test="clientName != null and  clientName != ''"> 
+		   and wm.nickname like CONCAT('%',#{clientName,jdbcType=VARCHAR},'%')
+		 </if>
+	</select>
+	
+	<select id="queryOrderDetailList" resultType="java.util.HashMap">
+		select wo.order_num orderNum,
+		       ws.proname,
+		       ws.skuname,
+		       wd.numsku,
+		       wd.subtotal,
+		       wo.extra_pay extraPay,
+		       wo.pay_amount payAmount,
+		       date_format(wo.create_time,'%Y-%m-%d %H:%i:%s') createTime,
+		       wo.user_address userAddress,
+		       wo.delivery_time deliveryTime,
+		       wo.order_status orderStatus,
+		       tos.order_status_name orderStatusName
+		  from WGQC_Order wo, WGQC_Order_Detail wd, WGQC_Sku ws,WGQC_order_status tos
+		 where wo.order_id = wd.order_id
+		   and wd.prosku_id = ws.proskuid
+		   and wo.order_status = tos.order_status_id
+		 <if test="orderNo != null and  orderNo != ''"> 
+		   and wo.order_num in 
+		   <foreach item="item" index="index" collection="orderNo" open="(" separator="," close=")">  
+		   		#{item}
+		   </foreach>
+		 </if>
+		 <if test="orderStatus != null and  orderStatus != ''"> 
+		   and wo.order_status = #{orderStatus,jdbcType=VARCHAR}
+		 </if>
+		 <if test="startTime != null and  endTime != '' and endTime != null and  startTime != ''">
+		   and wo.create_time between str_to_date(#{startTime},'%Y-%m-%d') and str_to_date(#{endTime},'%Y-%m-%d'); 
+		 </if>
+		 <if test="startIndex != null and  pageSize != '' and pageSize != null and  startIndex != ''">
+		 	limit #{startIndex} ,#{pageSize}
+		 </if>
+	</select>
+	
+	<select id="queryOrderDetailTotalPageSize" resultType="java.lang.Integer">
+		select count(1)
+		  from WGQC_Order wo, WGQC_Order_Detail wd, WGQC_Sku ws
+		 where wo.order_id = wd.order_id
+		   and wd.prosku_id = ws.proskuid;
+		 <if test="orderNo != null and  orderNo != ''"> 
+		   and wo.order_num = #{orderNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="orderStatus != null and  orderStatus != ''"> 
+		   and wo.order_status = #{orderStatus,jdbcType=VARCHAR}
+		 </if>
+		 <if test="startTime != null and  endTime != '' and endTime != null and  startTime != ''">
+		   and wo.create_time between str_to_date(#{startTime},'%Y-%m-%d') and str_to_date(#{endTime},'%Y-%m-%d'); 
+		 </if>
+	</select>
+	
+	<update id="updateOrderStatus"  parameterType="java.util.HashMap">
+        update WGQC_Order set order_status=#{orderStatus,jdbcType=VARCHAR} where  order_num=#{orderNo,jdbcType=VARCHAR}
+    </update>
+
+	<update id="updateAuditStatus"  parameterType="java.lang.String">
+        update WGQC_Praise set audit_status='Y'  where praise_id=#{praiseId,jdbcType=VARCHAR} and audit_status='N'
+    </update>
+    
+	<select id="queryEvaluateList" resultType="java.util.HashMap">
+		SELECT wp.praise_id praiseId,
+		wm.nickname nickname,
+		wp.skugood skugood,
+		wp.praise_star praisestar,
+		wp.praise_content praisecontent,
+		date_format(wp.praise_time,'%Y-%m-%d %H:%i:%s') praisetime,
+		wp.audit_status auditstatus
+		FROM WGQC_Praise wp, WGQC_Member wm
+		where wp.user_id = wm.user_id
+		<if test="clientName != null and  clientName != ''">
+			and wm.nickname like CONCAT('%',#{clientName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="auditStatus != null and  auditStatus != ''"> 
+		   and wp.audit_status = #{auditStatus,jdbcType=VARCHAR}
+		 </if>
+		order by wp.praise_time desc limit #{startIndex} ,#{pageSize}
+	</select>
+	
+	
+	<select id="queryEvaluateTotalPageSize" resultType="java.lang.Integer">
+		select count(1)
+		  from WGQC_Praise 
+	</select>
+	
+	<select id="queryEvaluateGood" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT wm.nickname nickname,
+		wp.praise_content praisecontent,
+		wp.praise_star praisestar,
+		date_format(wp.praise_time,'%Y-%m-%d %H:%i:%s') praisetime,
+		wp.
+		FROM WGQC_Praise wp, WGQC_Member wm
+		where wp.user_id = wm.user_id
+		and wp.skugood = #{skugood,jdbcType=VARCHAR}
+		order by wp.praise_time desc
+	</select>
+	
+	
+	<select id="queryAdList" resultType="java.util.HashMap">
+		SELECT 
+			  Ad_id, 
+			  ad_picture, 
+			  ad_location, 
+		      cname,
+			  ad_href, 
+			  ad_status 
+		 FROM WGQC_Ad wa,WGQC_Catalog wc
+		where wa.ad_location = wc.cid
+		<if test="adId != null and  adId != ''"> 
+		   and Ad_id = #{adId,jdbcType=VARCHAR}
+		</if>
+		<if test="startIndex != null"> 
+		 limit #{startIndex} ,#{pageSize}
+		</if>
+	</select>
+	
+	<select id="queryAdTotalPageSize" resultType="java.lang.Integer">
+		select count(1)
+		  from WGQC_Ad
+	</select>
+	
+	<update id="updateAdStatus"  parameterType="java.lang.String">
+        update WGQC_Ad set ad_status='Y'  where Ad_id=#{AdId,jdbcType=VARCHAR} and ad_status='N'
+    </update>
+    
+    <update id="updateAdStatusN"  parameterType="java.lang.String">
+        update WGQC_Ad set ad_status='N'  where Ad_id=#{AdId,jdbcType=VARCHAR} and ad_status='Y'
+    </update>
+    
+    <update id="updateAdStatusY"  parameterType="java.util.HashMap">
+        update WGQC_Ad set ad_status=#{AdStatus,jdbcType=VARCHAR} where  Ad_id=#{AdId,jdbcType=VARCHAR}
+    </update>
+    
+     <update id="updateFreepost"  parameterType="java.util.HashMap">
+        update WGQC_Set set set_object=#{freepost,jdbcType=VARCHAR} where  set_id=#{setId,jdbcType=VARCHAR}
+    </update>
+
+
+	<select id="queryFreepost" resultType="java.util.HashMap">
+		<![CDATA[
+			 select set_id,set_object from WGQC_Set
+		]]>
+	</select>
+    
+    
+</mapper>

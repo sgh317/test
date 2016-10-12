@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rayuniverse.wchat.gw.menu.dao.WXMenuDao">
+	
+	 
+	
+	<select id="getWXMenu"   resultType="com.rayuniverse.wchat.gw.menu.domain.WXMenu">
+	     SELECT data as data  FROM wx_menu where flag=1
+	</select>
+	
+	<update id="updateWXMenu" parameterType="com.rayuniverse.wchat.gw.menu.domain.WXMenu">
+		update wx_menu
+		set data = #{data,jdbcType=BLOB}
+		where flag = #{flag,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertWXMenu" parameterType="com.rayuniverse.wchat.gw.menu.domain.WXMenu">
+		insert into wx_menu(data, flag) values(#{data,jdbcType=BLOB}, '1')
+	</insert>
+</mapper>

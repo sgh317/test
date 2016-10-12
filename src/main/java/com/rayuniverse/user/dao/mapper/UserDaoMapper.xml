@@ -1,0 +1,115 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rayuniverse.user.dao.UserDao">
+	<sql id="prefixSql">
+		<if test="pageSize != null and  pageSize != '' and  pageSize != 0"> 
+			SELECT * FROM (select row_.*, rownum start_rownum_ from
+			(
+			</if>
+		</sql>
+		<sql id="suffixSql">
+			<if test="pageSize != null and  pageSize != '' and  pageSize != 0"> 
+			<![CDATA[
+			) row_ WHERE rownum <= #{startIndex,jdbcType=NUMERIC}+#{pageSize,jdbcType=NUMERIC} )  WHERE start_rownum_ > #{startIndex,jdbcType=NUMERIC}
+			]]>
+		</if>
+	</sql>
+	
+	<resultMap id="userRM" type="com.rayuniverse.user.domain.UserInfo">
+		<id property="id" column="id" />
+		<id property="userId" column="userid"/>
+		<id property="name" column="name" />
+		<id property="password" column="password" />
+		<id property="type" column="type" />
+		<id property="flag" column="flag" />
+	</resultMap>
+	<resultMap id="groupRM" type="com.rayuniverse.user.domain.GroupInfo">
+		<id property="id" column="id" />
+		<id property="code" column="code"/>
+		<id property="name" column="name" />
+		<id property="desc" column="desc" />
+		<id property="flag" column="flag" />
+	</resultMap>
+	
+	
+	<select id="getUserInfo" parameterType="java.lang.String" resultMap="userRM">
+	 select t.id as id ,t.userId as userid,t.name as name ,t.password as password, t.type, t.flag
+	 from users t where   t.flag=1
+	 and  t.userId=#{userId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getUserInfoById" parameterType="java.lang.String" resultMap="userRM">
+	 select t.id as id ,t.userId as userid,t.name as name ,t.password as password, t.type, t.flag
+	 from users t where t.id=#{id,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="existsUser" parameterType="java.lang.String" resultType="java.lang.Integer">
+	 select count(*) 
+	 from users t where   t.flag=1
+	 and  t.userId=#{userId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryGroupListByUserId" parameterType="java.lang.String" resultMap="groupRM">
+		SELECT ug.id, ug.code, ug.name, ug.desc, ug.flag
+		FROM user_group ug, group_to_user gtu 
+		WHERE ug.ID = gtu.group_id 
+			  AND ug.flag = '1'
+			  AND gtu.user_id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="queryResourceListByUserId" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT DISTINCT gtr.resource_id 
+		FROM group_to_resource gtr, group_to_user gtu 
+		WHERE gtr.group_id = gtu.group_id 
+			  AND gtu.user_id = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addNewUser" parameterType="com.rayuniverse.user.domain.UserInfo" >
+	   insert into users(id,userId,name,password,type,flag)values(#{id,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},1)
+	</insert>
+	
+	<update id="updateUserInfo" parameterType="com.rayuniverse.user.domain.UserInfo">
+		UPDATE users
+		SET userid = #{userId,jdbcType=VARCHAR},
+		    NAME = #{name,jdbcType=VARCHAR}, 
+		    PASSWORD = #{password,jdbcType=VARCHAR}, 
+		    TYPE = #{type,jdbcType=VARCHAR}, 
+		    flag = #{flag,jdbcType=VARCHAR}
+		WHERE id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteUserToGroup" parameterType="java.lang.String">
+		delete from group_to_user where user_id = #{userId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertUserToGroup" parameterType="java.util.HashMap">
+		insert into group_to_user(user_id, group_id) values(#{userId,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- <delete id="deleteUserById" parameterType="java.lang.String">
+		DELETE FROM users WHERE id = #{id,jdbcType=VARCHAR}
+	</delete> -->
+	<update id="deleteUserById" parameterType="java.lang.String">
+		UPDATE users SET flag = 0 WHERE id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryUserList" parameterType="java.util.HashMap" resultMap="userRM">
+		<include refid="prefixSql"/>
+		SELECT t.id, t.userId as userid, t.name, t.password, t.type, t.flag
+		  FROM users t
+		 WHERE 1 = 1
+		 <if test="userId != null and userId != ''">
+		 	and t.userId like CONCAT(#{userId,jdbcType=VARCHAR},'%')
+		 </if>
+		 <if test="userName != null and userName != ''">
+		 	and t.name like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+		 </if>
+		 <if test="userType != null and userType != ''">
+		 	and t.type = #{userType,jdbcType=VARCHAR}
+		 </if>
+		 <if test="flag != null and flag != ''">
+		 	and t.flag = #{flag,jdbcType=VARCHAR}
+		 </if>
+		 <include refid="suffixSql"/>
+	</select>
+</mapper>

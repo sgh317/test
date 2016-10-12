@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <!--<link rel="stylesheet" href="css/sm.min.css">-->
+    <link rel="stylesheet" href="../main/css/sm.css">
+    <!-- 
+    <link rel="stylesheet" href="../main/css/sm-extend.min.css"> -->
+    <link rel="stylesheet" href="../main/css/sm.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    
+    <script type="text/javascript">
+    	function hideAddProduct(){
+    		$("#100006LI").hide();
+    		$("#100007LI").hide();
+    		$("#100008LI").hide();
+    		$("#100009LI").hide();
+    		$("#100010LI").hide();
+    		
+    	}
+    	
+    	function showAddProduct(){
+    		$("#100006LI").show();
+    		$("#100007LI").show();
+    		$("#100008LI").show();
+    		//$("#100009LI").show();
+    		//$("#100010LI").show();
+    		
+    		$("#remarkInfo").hide();
+    	}
+    	
+    	$(function(){
+    		//DIALOG.loading();
+    		
+    		$("[id$='PremDiv']").each(function(){
+    			$(this).html('');
+    		});
+    		
+    		$("#J_100011").attr("checked",true);
+    		$("#J_100011").attr("readonly",true);
+    		
+    		hideAddProduct();
+    		
+    		RpcContext.getBean('customerJsBean').loadProductInfoList({
+    			onSucess:function(result)
+    			{	
+    				var res = eval('('+result+')');
+    				
+    				if(res.flag == 'Y'){
+    					//DIALOG.close();
+    					if(res.orderId != null && res.orderId != '' ){
+    						$("#orderId").val(res.orderId);
+    						$("#100002Amount").val(res.product.buyPrice);
+    						$("#100005Amount").val(res.product.buyPrice);
+    						
+    						if(res.product !=null && res.product.product100001 !=null && res.product.product100001.premium !=null && res.product.product100001.amount !=null ){
+    							$("#J_100001").attr("checked",true);
+    							$("#100001Amount_"+res.product.product100001.amount).attr("selected", true);
+    							$("#100001Amount").val(res.product.product100001.amount);
+    							
+    							$("#100001PremDiv").html('');
+    	    	    			$("#100001PremDiv").append("￥ "+res.product.product100001.conversionPrem);
+    						}else{
+    							$("#J_100001").removeAttr('checked');
+    							$("#100001PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100002 !=null && res.product.product100002.premium !=null && res.product.product100002.amount !=null ){
+    							$("#J_100002").attr("checked",true);
+								$("#100002Amount").attr('value',res.product.product100002.amount);
+								
+								$("#100002PremDiv").html('');
+    	    	    			$("#100002PremDiv").append("￥ "+res.product.product100002.conversionPrem);						
+    							
+    						}else{
+    							$("#J_100002").removeAttr('checked');
+    							$("#100002PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100003 !=null && res.product.product100003.premium !=null && res.product.product100003.amount !=null ){
+    							$("#J_100003").attr("checked",true);
+								$("#100003Amount").attr('value',res.product.product100003.amount);								
+    							
+								$("#100003PremDiv").html('');
+    	    	    			$("#100003PremDiv").append("￥ "+res.product.product100003.conversionPrem);
+    						}else{
+    							$("#J_100003").removeAttr('checked');
+    							$("#100003PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100004 !=null && res.product.product100004.premium !=null && res.product.product100004.amount !=null ){
+    							$("#J_100004").attr("checked",true);
+    							$("#100004PremDiv").html('');
+    	    	    			$("#100004PremDiv").append("￥ "+res.product.product100004.conversionPrem);
+    						}else{
+    							$("#J_100004").removeAttr('checked');
+    							$("#100004PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100005 !=null && res.product.product100005.premium !=null){
+    							$("#J_100005").attr("checked",true);
+    							$("#100005Amount").attr('value',res.product.product100005.amount);
+    							
+    							if(res.product.product100005.isLocalGlass == 'Y'){
+    								$("#J_100005_local").attr("checked",true);
+    								$("#J_100005_forieign").removeAttr('checked');    								
+    							}else{
+    								$("#J_100005_forieign").attr("checked",true);
+    								$("#J_100005_local").removeAttr('checked');
+    							}
+    							
+    							$("#100005PremDiv").html('');
+    	    	    			$("#100005PremDiv").append("￥ "+res.product.product100005.conversionPrem);
+    						}else{
+    							$("#J_100005").removeAttr('checked');
+    							$("#100005PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100006 !=null && res.product.product100006.premium !=null ){
+    							$("#J_100006").attr("checked",true);
+    							$("#100006Amount_"+res.product.product100006.amount).attr("selected", true);
+    							$("#100006Amount").val(res.product.product100006.amount);
+    							
+    							$("#100006PremDiv").html('');
+    	    	    			$("#100006PremDiv").append("￥ "+res.product.product100006.conversionPrem);
+    	    	    			
+    	    	    			showAddProduct();
+    						}else{
+    							$("#J_100006").removeAttr('checked');
+    							$("#100006PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100007 !=null && res.product.product100007.premium !=null  ){
+    							$("#J_100007").attr("checked",true);
+    							$("#100007PremDiv").html('');
+    	    	    			$("#100007PremDiv").append("￥ "+res.product.product100007.conversionPrem);
+    	    	    			
+    	    	    			showAddProduct();
+    						}else{
+    							$("#J_100007").removeAttr('checked');
+    							$("#100007PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100008 !=null && res.product.product100008.premium !=null  ){
+    							$("#J_100008").attr("checked",true);
+    							$("#100008PremDiv").html('');
+    	    	    			$("#100008PremDiv").append("￥ "+res.product.product100008.conversionPrem);
+    	    	    			
+    	    	    			showAddProduct();
+    						}else{
+    							$("#J_100008").removeAttr('checked');
+    							$("#100008PremDiv").html('');
+    						}
+    						
+    						if(res.product !=null && res.product.product100009 !=null && res.product.product100009.premium !=null  ){
+    							$("#J_100009").attr("checked",true);
+    							$("#100009PremDiv").html('');
+    	    	    			$("#100009PremDiv").append("￥ "+res.product.product100009.conversionPrem);
+    	    	    			
+    	    	    			showAddProduct();
+    						}else{
+    							$("#100009PremDiv").html('');
+    							$("#J_100009").removeAttr('checked');
+    						}
+    						
+    						if(res.product !=null && res.product.product100010 !=null && res.product.product100010.premium !=null  ){
+    							$("#J_100010").attr("checked",true);
+    							$("#100010PremDiv").html('');
+    	    	    			$("#100010PremDiv").append("￥ "+res.product.product100010.conversionPrem);
+    	    	    			
+    	    	    			showAddProduct();
+    						}else{
+    							$("#100010PremDiv").html('');
+    							$("#J_100010").removeAttr('checked');
+    						}
+    						
+    						if(res.product !=null && res.product.product100011 !=null && res.product.product100011.premium !=null  ){
+    							$("#J_100011").attr("checked",true);
+    							$("#100011PremDiv").html('');
+    	    	    			$("#100011PremDiv").append("￥ "+res.product.product100011.conversionPrem);
+    	    	    			
+    						}else{
+    							$("#100011PremDiv").html('');
+    						}
+    						
+    						if(res.contain100001!=null){
+    							$("#contain100001").attr("checked",true);
+    						}
+    						
+    						if(res.contain100002!=null){
+    							$("#contain100002").attr("checked",true);
+    						}
+    						if(res.contain100003!=null){
+    							$("#contain100003").attr("checked",true);
+    						}
+    						if(res.contain100004!=null){
+    							$("#contain100004").attr("checked",true);
+    						}
+    						if(res.contain100006!=null){
+    							$("#contain100006").attr("checked",true);
+    						}
+    						
+    						$("#sum").html("合计：￥"+res.payAmount);
+    						$("#suifei").html("￥"+res.taxAmount);
+    						$("#jqx").html("￥"+res.jqAmount);
+    						$("#syx").html("￥"+res.syAmount);
+    						$("#dkAmount").html("￥ -"+res.dkAmount+"")
+    						
+    					}else{
+    						//DIALOG.close();
+    						alert('抱歉，您还没有订单，请返回上一页面提交');
+    					}
+    				}else{
+    					//DIALOG.close();
+    					alert('抱歉，数据异常，请稍后再试');
+    				}
+    			},
+    			 onError:function(err)
+				{
+    				 	//DIALOG.close();
+    				 	alert('抱歉，加载异常，请刷新后重试');
+				}
+    		});
+    		//calProductAll();
+    	}); 
+    	    	
+    	function checkGlass(obj){
+    		if(obj == 'local'){
+    			$("#J_100005_local").attr("checked",true);
+    			$("#J_100005_forieign").removeAttr("checked");
+    			
+    			var amount = $("#100005Amount").val();
+    			if(amount!=null&&amount!='')
+    				calProductAll();
+    		}else{
+    			$("#J_100005_forieign").attr("checked",true);
+    			$("#J_100005_local").removeAttr("checked");
+    			
+    			var amount = $("#100005Amount").val();
+    			if(amount!=null&&amount!='')
+    				calProductAll();
+    		}
+    	}
+    	
+    	function calProductAll(){
+    		//DIALOG.loading();
+    		$("[id$='PremDiv']").each(function(){
+    			$(this).html('');
+    		});
+    		
+    		var choose100001 = $("#J_100001").is(":checked")?"Y":"N";
+    		var amount100001 = $("#100001Amount").val();
+    		var choose100002 = $("#J_100002").is(":checked")?"Y":"N";
+    		var amount100002 = $("#100002Amount").val();
+    		var choose100003 = $("#J_100003").is(":checked")?"Y":"N";
+    		var amount100003 = $("#100003Amount").val();
+    		var buyforDriver = "Y";
+    		var buyforPassenger = "Y";
+    		var choose100004 = $("#J_100004").is(":checked")?"Y":"N";
+    		var choose100005 = $("#J_100005").is(":checked")?"Y":"N";
+    		var amount100005 = $("#100005Amount").val();
+    		var isLocalGlass = $("#J_100005_local").is(":checked")?"Y":"N";
+    		var choose100006 = $("#J_100006").is(":checked")?"Y":"N";
+    		var amount100006 = $("#100006Amount").val();
+    		var choose100007 = $("#J_100007").is(":checked")?"Y":"N";
+    		var amount100007 = $("#100007Amount").val();
+    		var choose100008 = $("#J_100008").is(":checked")?"Y":"N";
+    		var choose100009 = $("#J_100009").is(":checked")?"Y":"N";
+    		var amount100009 = $("#100009Amount").val();
+    		var choose100010 = $("#J_100010").is(":checked")?"Y":"N";
+    		var amount100010 = $("#100010Amount").val();
+    		var choose100011 = "Y";
+    		var designatedDriver = $("#designatedDriver").val();
+    		var designatedArea = $("#designatedArea").val();
+    		
+    		if(choose100001 == 'N'){
+    			$("#contain100001").removeAttr("checked");
+    		}
+    		
+    		if(choose100002 == 'N'){
+    			
+    			$("#J_100002").removeAttr("checked");
+    			
+    			$("#J_100005").attr("checked",false);
+    			$("#J_100006").attr("checked",false);
+    			$("#J_100007").attr("checked",false);
+    			
+    			$("#contain100002").removeAttr("checked");
+    			$("#contain100006").removeAttr("checked");
+    			
+    			choose100005 = "N";
+    			choose100006 = "N";
+    			choose100007 = "N";
+    		}
+    		
+    		if(choose100003 == 'N'){
+    			$("#contain100003").removeAttr("checked");
+    		}
+    		
+    		if(choose100004 == 'N'){
+    			$("#contain100004").removeAttr("checked");
+    		}
+    		
+    		if(choose100006 == 'N'){
+    			$("#contain100006").removeAttr("checked");
+    		}
+    		
+    		/* if(choose100002 == 'N'){
+    			$("#J_100005").removeAttr("checked");
+    			$("#J_100006").removeAttr("checked");
+    			$("#J_100007").removeAttr("checked");
+    			
+    			choose100005 = 'N';
+    			choose100006 = 'N';
+    			choose100007 = 'N';
+    			
+    		} */
+    		
+    		var contain100001 = $("#contain100001").is(":checked")?"Y":"N";
+    		var contain100002 = $("#contain100002").is(":checked")?"Y":"N";
+    		var contain100003 = $("#contain100003").is(":checked")?"Y":"N";
+    		var contain100004 = $("#contain100004").is(":checked")?"Y":"N";
+    		var contain100006 = $("#contain100006").is(":checked")?"Y":"N";
+    		
+    		RpcContext.getBean('customerJsBean').calProductAll(choose100001,amount100001,choose100002,amount100002,choose100003,amount100003,buyforDriver,buyforPassenger,choose100004,choose100005,amount100005,isLocalGlass,
+    				choose100006,amount100006,choose100007,amount100007,choose100008,choose100009,amount100009,choose100010,amount100010,choose100011,designatedDriver,designatedArea,contain100001,contain100002,contain100003,
+    				contain100004,contain100006,
+            {
+             onSucess:function(result)
+             {
+              var res = eval('('+result+')');
+        	  if(res.flag == 'Y'){
+        		  
+        		  //DIALOG.close();
+          		
+        		  for(var i=0;i<res.policyInfo.productList.length;i++){
+        			  if(res.policyInfo.productList[i]!=null&&res.policyInfo.productList[i].productCode!=null&&res.policyInfo.productList[i].productCode!=''){
+        			  	var productCode = res.policyInfo.productList[i].productCode;
+        			  	
+        			  	$("#"+productCode+"PremDiv").html('');
+        			  	$("#"+productCode+"PremDiv").html("<span class='price'>￥ "+res.policyInfo.productList[i].conversionPrem+"</span>");
+        			  	
+        			  }
+        		  }
+        		  
+        		$("#sum").html("合计：￥"+res.payAmount);
+        		$("#suifei").html("￥"+res.taxAmount);
+				$("#jqx").html("￥"+res.jqAmount);
+				$("#syx").html("￥"+res.syAmount);
+				$("#dkAmount").html("￥"+res.dkAmount);
+        	  	
+        	  }else{
+        		//DIALOG.close();
+        	   	alert(res.message);
+        	  }
+             },onError:function(err)
+          	{
+            	 //DIALOG.close();
+            	 alert('计算险种保费出现异常');
+          	}
+             });
+    	}
+    	
+    	function toReview(){
+    		
+    		
+    		var orderId = $("#orderId").val();
+    		var choose100001 = $("#J_100001").is(":checked")?"Y":"N";
+    		var amount100001 = $("#100001Amount").val();
+    		var choose100002 = $("#J_100002").is(":checked")?"Y":"N";
+    		var amount100002 = $("#100002Amount").val();
+    		var choose100003 = $("#J_100003").is(":checked")?"Y":"N";
+    		var amount100003 = $("#100003Amount").val();
+    		var buyforDriver = "Y";
+    		var buyforPassenger = "Y";
+    		var choose100004 = $("#J_100004").is(":checked")?"Y":"N";
+    		var choose100005 = $("#J_100005").is(":checked")?"Y":"N";
+    		var amount100005 = $("#100005Amount").val();
+    		var isLocalGlass = $("#J_100005_local").is(":checked")?"Y":"N";
+    		var choose100006 = $("#J_100006").is(":checked")?"Y":"N";
+    		var amount100006 = $("#100006Amount").val();
+    		var choose100007 = $("#J_100007").is(":checked")?"Y":"N";
+    		var amount100007 = $("#100007Amount").val();
+    		var choose100008 = $("#J_100008").is(":checked")?"Y":"N";
+    		var choose100009 = $("#J_100009").is(":checked")?"Y":"N";
+    		var amount100009 = $("#100009Amount").val();
+    		var choose100010 = $("#J_100010").is(":checked")?"Y":"N";
+    		var amount100010 = $("#100010Amount").val();
+    		var choose100011 = "Y";
+    		var designatedDriver = $("#designatedDriver").val();
+    		var designatedArea = $("#designatedArea").val();
+    		
+    		var contain100001 = $("#contain100001").is(":checked")?"Y":"N";
+    		var contain100002 = $("#contain100002").is(":checked")?"Y":"N";
+    		var contain100003 = $("#contain100003").is(":checked")?"Y":"N";
+    		var contain100004 = $("#contain100004").is(":checked")?"Y":"N";
+    		var contain100006 = $("#contain100006").is(":checked")?"Y":"N";
+    		
+    		if(choose100001=='N'&&choose100002=='N'&&choose100003=='N'&&choose100004=='N'&&choose100005=='N'&&
+    		   choose100006=='N'&&choose100007=='N'){
+    			alert('请选择您要投保的险种');
+    			return;
+    		}
+    		
+    		if(choose100001 == 'N'){
+    			$("#contain100001").removeAttr("checked");
+    		}
+    		
+    		if(choose100002 == 'N'){
+    			$("#contain100002").removeAttr("checked");
+    		}
+    		
+    		if(choose100003 == 'N'){
+    			$("#contain100003").removeAttr("checked");
+    		}
+    		
+    		if(choose100004 == 'N'){
+    			$("#contain100004").removeAttr("checked");
+    		}
+    		
+    		if(choose100006 == 'N'){
+    			$("#contain100006").removeAttr("checked");
+    		}
+    		
+    		/* if(choose100005 =='Y'|| choose100006 =='Y' ||choose100007 == 'Y')
+    		
+    		if(choose100002 == 'N'){
+    			$("#J_100005").removeAttr("checked");
+    			$("#J_100006").removeAttr("checked");
+    			$("#J_100007").removeAttr("checked");
+    			
+    			choose100005 = 'N';
+    			choose100006 = 'N';
+    			choose100007 = 'N';
+    			
+    		} */
+    		
+    		try{
+    		RpcContext.getBean('customerJsBean').saveProduct(orderId,choose100001,amount100001,choose100002,amount100002,choose100003,amount100003,buyforDriver,buyforPassenger,choose100004,choose100005,amount100005,isLocalGlass,
+    				choose100006,amount100006,choose100007,amount100007,choose100008,choose100009,amount100009,choose100010,amount100010,choose100011,designatedDriver,designatedArea,
+    				contain100001,contain100002,contain100003,contain100004,contain100006,
+            {
+    			onSucess:function(result)
+                {
+                 var res = eval('('+result+')');
+           	  	 if(res.flag == 'Y'){
+           		  
+           	  		//DIALOG.close();
+        		
+           	  		window.location.href = "card_review.html?random="+Math.random();	
+           	  	
+           	  	}else{
+           	  		//DIALOG.close();
+           	  		
+           	   		alert('保存险种信息出现异常');
+           	  	}
+                	},onError:function(err)
+             		{
+                		//DIALOG.close();
+               	  		
+               	   		alert('保存险种信息出现异常');
+             		}
+            	});
+    	}catch(error1){
+    		//DIALOG.close();
+    	} 
+    	}
+    	
+    	function checkAndCalProduct(obj){
+    		var thisId = $(obj).attr('id');
+    		
+    		var errMsg = '';
+    		
+    		//a) 投保玻璃破碎险时，必须先投保车损险，如违反此规则，前端需明确提示客户修改；
+    		//b) 投保车身划痕险时，必须先投保车损险，如违反此规则，前端需明确提示客户修改；
+    		//c) 投保自燃损失险时，必须先投保车损险，如违反此规则，前端需明确提示客户修改
+    		if(thisId == 'J_100005'){//a) 投保玻璃破碎险时，必须先投保车损险，如违反此规则，前端需明确提示客户修改；
+    			if($("#J_100005").is(":checked")&&
+    					!$("#J_100002").is(":checked")){
+    				$("#J_100005").attr("checked",false);
+    				errMsg += '投保玻璃破碎险时，必须先投保车损险';
+    			}
+    		}else if(thisId == 'J_100006'){//b) 投保车身划痕险时，必须先投保车损险，如违反此规则，前端需明确提示客户修改；
+    			if($("#J_100006").is(":checked")&&
+    					!$("#J_100002").is(":checked")){
+    				$("#J_100006").attr("checked",false);
+    				errMsg += '投保车身划痕险时，必须先投保车损险';
+    			}
+    		}else if(thisId == 'J_100007'){//c) 投保自燃损失险时，必须先投保车损险，如违反此规则，前端需明确提示客户修改
+    			if($("#J_100007").is(":checked")&&
+    					!$("#J_100002").is(":checked")){
+    				$("#J_100007").attr("checked",false);
+    				errMsg += '投保自燃损失险时，必须先投保车损险';
+    			}
+    		}
+    		
+    		if(errMsg != null && errMsg != ''){
+    			alert(errMsg);
+    			return;
+    		}else{
+    			calProductAll();	
+    		}
+    	}
+    </script>
+</head>
+<body>
+	<input type="hidden" id="orderId"/>
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title"><i class="icon-bao"></i><span>请选择您需要的保障</span></h1>
+        </header>
+        <nav class="bar bar-tab bar-button">
+            <div class="bar-webkit-box">
+		        <div class="popSlide">
+		            <ul>
+		                <li>
+		                    <span style="font-size:.84rem;">税　　 费：<em id="suifei" style="float:right;"></em></span>
+		                </li>
+		                <li>
+		                    <span style="font-size:.84rem;">交&nbsp;&nbsp;强&nbsp;&nbsp;险：<em id="jqx" style="float:right;"></em></span>
+		                </li>
+		                <li>
+		                    <span style="font-size:.84rem;">商&nbsp;&nbsp;业&nbsp;&nbsp;险：<em id="syx" style="float:right;"></em></span>
+		                </li>
+		                <li>
+		                	<span style="font-size:.84rem;">积分抵 扣：<em id="dkAmount" style="color:red;float:right;"></em></span>
+		                </li>
+		            </ul>
+		        </div>
+                <div class="bar-left">
+                    <div class="price-count"><span id="sum">合计：</span><em id="sumIns"></em><i class="icon-arrow-circle"></i></div>
+                </div>
+                <div class="bar-right">
+                    <a href="#" onclick="toReview();" class="button button-fill button-green external">下一步</a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="content accordion-list step-content" >
+            <div class="top-sub-bar">
+                <span>保障内容</span>
+                <span>折算保费</span>
+            </div>
+            <div class="step3-content">
+                <ul>
+                    <li>
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100002" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="J_100002">车损险</label>
+                                </div>
+                                <div class="input-box">
+                                    <input type="text" id="100002Amount" class="input-text" placeholder="请输入保额" onblur="calProductAll();" readonly/>
+                                </div>
+                                <p class="orange-tips">(98%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                            	<span class='price' id="100002PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100003" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="J_100003">车上人员责任险</label>
+                                </div>
+                                <div class="input-box">
+                                    <input type="text" id="100003Amount" class="input-text" placeholder="请输入保额" onblur="calProductAll();" readonly/>
+                                </div>
+                                <p class="orange-tips">(98%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100003PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100001" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="J_100001">三者险</label>
+                                </div>
+                                <div class="input-box">
+                                    <select id="100001Amount" class="input-select" onchange="calProductAll();">
+                                    	<option id="100001Amount_200000" value='200000'>200,000</option>
+	                            		<option id="100001Amount_300000" value='300000'>300,000</option>
+	                            		<option id="100001Amount_500000" value='500000'>500,000</option>
+	                            		<option id="100001Amount_1000000" value='1000000'>1000,000</option>
+                                    </select>
+                                </div>
+                                <p class="orange-tips">(96%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100001PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100004" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="J_100004">盗抢险</label>
+                                </div>
+                                <p class="orange-tips">(85%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100004PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100005" type="checkbox" onclick="checkAndCalProduct(this);"/>
+                                    <label for="J_100005">玻璃破碎险</label>
+                                </div>
+                                <div class="input-box">
+                                    <input type="text" id="100005Amount" class="input-text" placeholder="请输入保额" onblur="calProductAll();" readonly/>
+                                </div>
+                                <p class="orange-tips">(96%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100005PremDiv"></span>
+                            </div>
+                        </div>
+                        <div class="webkit-box" style="display:none;">
+                        	<div class="">
+                        		<div class="input-checkbox">
+                                    <input id="J_100005_local" type="checkbox" checked=true/>
+                                    <label for="J_100005_local">国产玻璃</label>
+                                </div>
+                        	</div>
+                        	<div class="input-box">
+                        		<div class="input-checkbox">
+                                    <input id="J_100005_forieign" type="checkbox"/>
+                                    <label for="J_100005_forieign">进口玻璃</label>
+                                </div>
+                        	</div>
+                        </div>                        
+                    </li><li id="100006LI">
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100006" type="checkbox" onclick="checkAndCalProduct(this);"/>
+                                    <label for="J_100006">车身划痕险</label>
+                                </div>
+                                <div class="input-box">
+                                    <select id="100006Amount" class="input-select" onchange="calProductAll();">
+                            			<option id="100006Amount_2000" value='2000'>2,000</option>
+	                            		<option id="100006Amount_5000" value='5000'>5,000</option>
+	                            		<option id="100006Amount_10000" value='10000'>10,000</option>
+	                            		<option id="100006Amount_20000" value='20000'>20,000</option>
+                                    </select>
+                                </div>
+                                <p class="orange-tips">(76%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100006PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li id="100007LI">
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100007" type="checkbox" onclick="checkAndCalProduct(this);"/>
+                                    <label for="J_100007">自燃损失险</label>
+                                </div>
+                                <p class="orange-tips">(85%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100007PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li id="100008LI">
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100008" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="J_100008">不计免赔特约</label>
+                                </div>
+                                <p class="orange-tips">(96%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100008PremDiv"></span>
+                            </div>
+                        </div>
+                        <div class="webkit-box">
+                        	<div class="">
+                        		<div class="input-checkbox">
+                                    <input id="contain100001" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="contain100001">第三者责任保险</label>
+                                </div>
+                        	</div>
+                        	<div class="input-box">
+                        		<div class="input-checkbox">
+                                    <input id="contain100002" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="contain100002">机动车损失保险</label>
+                                </div>
+                        	</div>
+                        </div>
+                        <div class="webkit-box">
+                        	<div class="input-box">
+                        		<div class="input-checkbox">
+                                    <input id="contain100003" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="contain100003">车上人员责任保险</label>
+                                </div>
+                        	</div>
+                        	<div class="input-box">
+                        		<div class="input-checkbox">
+                                    <input id="contain100004" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="contain100004">盗抢险</label>
+                                </div>
+                        	</div>
+                        	<div class="input-box">
+                        		<div class="input-checkbox">
+                                    <input id="contain100006" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="contain100006">车身划痕险</label>
+                                </div>
+                        	</div>
+                        </div>
+                    </li>
+                    <li id="100009LI">
+                        <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100009" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="J_100009">选择汽修厂特约</label>
+                                </div>
+                                <p class="orange-tips">(76%的车主投保)</p>
+                            </div>
+                            <div class="right">
+                                <span class="price" id="100009PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li id="100010LI">
+                    	<div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100010" type="checkbox" onclick="calProductAll();"/>
+                                    <label for="J_100010">新增设备损失险</label>
+                                </div>
+                                <p class="orange-tips">(85%的车主投保)</p>
+                            </div>
+                        	<div class="right">
+                                <span class="price" id="100009PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="J_100011" type="checkbox" checked=true readonly=true  onclick="return false;"/>
+                                    <label for="J_100011">交强险</label>
+                                </div>
+                                <p class="orange-tips">(必须购买)</p>
+                            </div>
+                        	<div class="right">
+                                <span class="price" id="100011PremDiv"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    	 <div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="zdjsy" type="checkbox" checked=true readonly=true  onclick="return false;"/>
+                                    <label for="zdjsy">不指定驾驶员</label>
+                                    <input type="hidden" id="designatedDriver" value="N"/>
+                                </div>
+                                <p class="orange-tips"></p>
+                            </div>
+                        	<div class="right">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="webkit-box">
+                            <div class="left">
+                                <div class="input-checkbox">
+                                    <input id="zdqy" type="checkbox" checked=true readonly=true  onclick="return false;"/>
+                                    <label for="zdqy">不指定行驶区域</label>
+                                    <input type="hidden" id="designatedArea" value="N"/>
+                                </div>
+                                <p class="orange-tips">(国内)</p>
+                            </div>
+                        	<div class="right">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="webkit-box-level">
+            	<!-- 
+                <a href="#" onclick="showAddProduct();" class="link-other">还想要其他保障？点我<i class="icon-arrow arrow-down"></i></a>
+                 -->
+            </div>
+        </div>
+        </div>
+    <script type="text/javascript" src="../main/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../main/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../main/js/sm-extend.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='js/commonUtil.js' charset='utf-8'></script>
+    <script type="text/javascript">
+        $(function() {
+            //$.init();
+            var isClick = 0;
+            $(".icon-arrow-circle").click(function(){
+                if(isClick == 0) {
+                    $(".popSlide").css({
+                        "bottom":"2.34rem"
+                    })
+                    isClick = 1;
+                }else if(isClick == 1){
+                    $(".popSlide").css({
+                        "bottom":"-100%"
+                    })
+                    isClick = 0;
+                }
+                $(this).toggleClass("up");
+            })
+        });
+    </script>
+</body>
+</html>

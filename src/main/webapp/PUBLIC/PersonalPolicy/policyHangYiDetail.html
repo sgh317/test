@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>航意险保单详细信息</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/sm.min.css">
+    <link rel="stylesheet" href="css/sm-extend.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="css/card.insur.css?v=1.0" />
+</head>
+<body>
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title">航意险保单详细信息</h1>
+        </header>
+        <!--<nav class="bar bar-tab bar-button">
+            <div class="webkit-box-align">
+                <div>
+                    <a id="J_action" href="#" class="button button-fill button-danger">确认下单</a>
+                </div>
+            </div>
+        </nav>-->
+        <div class="content accordion-list">
+            <div class="form-box list-block white">
+                <div class="form-title">基本信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">保单号：935359088888888</span>
+                                <span class="start-time">险种名称：航意险</span>
+                                
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">生效日期：2015-10-01</span>
+                                <span class="start-time">终止日期：2015-10-01</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">保额：4000元</span>
+                                <span class="start-time">保单状态：有效</span>
+                                <span class="start-time">是否是赠险：是</span>                               
+                            </div>
+                        </div>
+                    </li>                                       
+                </ul>
+            </div>
+            <div class="form-box list-block white">
+                <div class="form-title">投保人信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">姓名：朱小伟</span>
+                                <span class="start-time">证件类型：身份证</span>
+                                
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">证件号码：321324198902342413</span>
+                                <span class="start-time">联系电话：15951875678</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-box list-block white">
+                <div class="form-title">被保人信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">姓名：朱小伟</span>
+                                <span class="start-time">性别：男</span>
+                                <span class="start-time">证件类型：身份证</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">证件号码：321324198902342413</span>
+                                <span class="start-time">生日：1989-02-08</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-box list-block white">
+                <div class="form-title">受益人信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">受益人：法定</span>
+                                <span class="start-time">受益人类型：身故受益人</span>
+                               
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">受益顺序：1</span>
+                                <span class="start-time">受益比列：100%</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='js/sm-extend.min.js' charset='utf-8'></script>
+    <script type="text/javascript">
+        $(function(){
+            $.init();
+            $(".input-date").calendar();
+            $("#J_action").bind("click",function(){  // 演示链接,开发时请忽略
+                location.href = "detail_info.html";
+            })
+        })
+    </script>
+</body>
+</html>

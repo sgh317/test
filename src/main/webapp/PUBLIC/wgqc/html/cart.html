@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>万果千仓</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="../lib/sui/sm.min.css">
+    <link rel="stylesheet" href="../lib/slick/slick.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../css/app.css?v=1.0" />
+</head>
+<body>
+<div class="page-group">
+    <div class="page">
+        <nav class="bar bar-tab">
+            <a class="tab-item external" href="home.html">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="list.html">
+                <span class="icon icon-health"></span>
+                <span class="tab-label">分类</span>
+            </a>
+            <a class="tab-item external active" href="cart.html">
+                <span class="icon icon-tips"></span>
+                <span class="tab-label">购物车</span>
+                <span class="badge">2</span>
+            </a>
+            <a class="tab-item external" href="my.html">
+                <span class="icon icon-me"></span>
+                <span class="tab-label">我的</span>
+            </a>
+        </nav>
+        <div class="bottom-bar cart-bottom-bar">
+            <div class="checkbox">
+                <input id="checkAll" name="checkAll" type="checkbox" class="checkbox-yellow" />
+                <label for="checkAll">全选</label>
+            </div>
+            <div class="cart-count">
+                <span>合计：</span>
+                <span class="price">¥ 236.00</span>
+            </div>
+            <div class="buy-btn-group">
+                <button type="button" class="btn-group-pay" onclick="location.href='settlement.html'">结算 (6)</button>
+            </div>
+        </div>
+        <div class="content">
+            <!-- 购物车为空时 -->
+            <!--
+            <div class="cart-empty">
+                <div class="cart-icon"></div>
+                <div class="cart-text">您的购物车还是空的</div>
+                <a href="" class="btn-link-index">去首页逛逛</a>
+            </div>
+            -->
+            <!-- 购物车列表 -->
+            <div class="cart-list">
+                <div class="list-title">购物清单</div>
+                <div class="product-list">
+                    <ul>
+                        <li>
+                            <a href="detail.html">
+                                <div class="checkbox">
+                                    <input name="checkItem" type="checkbox" class="checkbox-yellow" checked />
+                                </div>
+                                <div class="pro-img">
+                                    <img src="../pic/pic_250x200_1.jpg" />
+                                </div>
+                                <div class="pro-info">
+                                    <h2 class="pro-name">泰国金枕榴莲</h2>
+                                    <div>
+                                        <span class="pro-price">¥ 69.00</span>
+                                        <span class="pro-specifications">/约6斤</span>
+                                    </div>
+                                    <div class="div-num dis-box">
+                                        <span class="num-less" onclick="changePrice('1')"></span>
+                                        <input type="text" value="1" name="number" class="" autocomplete="off">
+                                        <span class="num-plus" onclick="changePrice('3')"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="detail.html">
+                                <div class="checkbox">
+                                    <input name="checkItem" type="checkbox" class="checkbox-yellow" />
+                                </div>
+                                <div class="pro-img">
+                                    <img src="../pic/pic_250x200_2.jpg" />
+                                </div>
+                                <div class="pro-info">
+                                    <h2 class="pro-name">泰国进口金柚</h2>
+                                    <div>
+                                        <span class="pro-price">¥ 29.90</span>
+                                        <span class="pro-specifications">/4个</span>
+                                    </div>
+                                    <div class="div-num dis-box">
+                                        <span class="num-less" onclick="changePrice('1')"></span>
+                                        <input type="text" value="2" name="number" class="" autocomplete="off">
+                                        <span class="num-plus" onclick="changePrice('3')"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="detail.html">
+                                <div class="checkbox">
+                                    <input name="checkItem" type="checkbox" class="checkbox-yellow" />
+                                </div>
+                                <div class="pro-img">
+                                    <img src="../pic/pic_250x200_3.jpg" />
+                                </div>
+                                <div class="pro-info">
+                                    <h2 class="pro-name">辽宁丹东新鲜草莓</h2>
+                                    <div>
+                                        <span class="pro-price">¥ 46.00</span>
+                                        <span class="pro-specifications">/约2斤</span>
+                                    </div>
+                                    <div class="div-num dis-box">
+                                        <span class="num-less" onclick="changePrice('1')"></span>
+                                        <input type="text" value="3" name="number" class="" autocomplete="off">
+                                        <span class="num-plus" onclick="changePrice('3')"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../lib/zepto/zepto.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../lib/jquery/jquery-1.8.3.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+    Zepto.config = {
+        router:false   // 关闭页面路由
+    }
+</script>
+<script type="text/javascript" src="../lib/sui/sm.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../lib/slick/slick.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/app.js" charset="utf-8"></script>
+<script type="text/javascript">
+    Zepto(function() {
+        Zepto.init();  // 页面初始化
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#checkAll").change(function(){
+            if($(this).attr("checked") == "checked"){
+                $(".cart-list").find("input[type=checkbox]").attr("checked","true")
+            }else{
+                $(".cart-list").find("input[type=checkbox]").attr("checked",false)
+            }
+        })
+        function changePrice(type) {
+            var qty = document.forms['ECS_FORMBUY'].elements['number'].value;
+
+            if (type == 1) {
+                qty--;
+            }
+            if (type == 3) {
+                qty++;
+            }
+            if (qty <= 0) {
+                qty = 1;
+            }
+            if (!/^[0-9]*$/.test(qty)) {
+                qty = document.getElementById('back_number').value;
+            }
+            document.getElementById('goods_number').value = qty;
+            var attr = getSelectedAttributes(document.forms['ECS_FORMBUY']);
+            $.get('/b2c/index.php?m=default&c=goods&a=price&u=0', {
+                'id': goodsId,
+                'attr': attr,
+                'number': qty
+            }, function(data) {
+                changePriceResponse(data);
+            }, 'json');
+        }
+    })
+</script>
+</body>
+</html>

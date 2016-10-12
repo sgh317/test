@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html id="html">
+<head lang="en">
+	<meta charset="UTF-8"/>  
+    <meta NO_SESSION='Y'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta id="viewport" name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>客户信息确认</title>
+    <link rel="stylesheet" type="text/css" href="../common/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../common/css/custom.css">
+
+    
+    <script type="text/javascript">
+        (function(){
+            var device = window.innerWidth,scale = device / 640,meta = document.getElementById("viewport");
+            meta.setAttribute("content","initial-scale=" + scale + ", width=device-width, maximum-scale=1, user-scalable=no");
+            document.addEventListener("touchend",function(){return false})
+        })();
+        
+			 
+
+			 
+		function commit(){
+						
+            		 window.location.replace("./result_success.html");
+	    
+		}
+        
+        
+        
+        
+    </script>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/frozen.css" />
+    <!-- 1f5私有样式 -->
+    <link rel="stylesheet" href="css/lars.wx.css?v=1.0" />
+    
+</head>
+<body>
+ <!-- 页面主体 -->
+    <div class="pageMain pb100">
+     	 <div class="formBox">
+            <ul>
+              
+                <li>
+                      <div class="levelBox">
+                       <div class="inputSelectList selectArrowDown">
+                            <input type="text" placeholder="被保人" id="bankAccount" value="" onBlur="checkBankAccount()"/>
+                        </div>
+                        <div class="space"></div>
+                       <div class="inputSelectList selectArrowDown">
+                            <select class="selectDefault" id="provinceSelect" onChange="changeCity()">
+                              <option value="01">身份证</option>
+                              <option value="02">护照</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                  <li>
+                   <input type="text" placeholder="证件号码" id="bankAccount" value="" onBlur="checkBankAccount()"/>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="formBox">
+            <div id="ctxInfo">
+			<table class="table table-bordered table-striped" style="font-size:30px;">
+			<tbody>
+			 <tr><td>保额总额</td><td>4,300.00</td></tr>
+			  <tr><td>可抵扣金额</td><td>600.00</td></tr>
+			  <tr><td>应付金额</td><td>3,700.00</td></tr>			  
+			</tbody>
+			</table>
+			</div>
+        </div>
+         
+         <div class="formBox">
+            <ul>
+              
+                <li>
+                      <div class="inputSelectList selectArrowDown">
+                        <select class="selectDefault" id="applyType" onBlur="checkApplyType()">
+                            <option value="">请选择支付方式</option>
+                            <option value="01">微信支付</option>
+                            <option value="02">至大地网点现场支付</option>  
+                            <option value="03">预约服务人员上门收费及配送保单</option>                                        
+                        </select>
+                    </div>
+                </li>
+                  <li>
+                   <div class="levelBox">
+                        <div class="inputSelectList selectArrowDown">
+                            <select class="selectDefault" id="provinceSelect" onChange="changeCity()">
+                              <option value="">城市</option>
+                              <option value="01">南京</option>
+                              <option value="02">常州</option>
+                              <option value="03">苏州</option>
+                            </select>
+                        </div>
+                        <div class="space"></div>
+                        <div class="inputSelectList selectArrowDown">
+                            <select class="selectDefault" id="citySelect">
+                              <option value="">区/县</option>
+                              <option value="0101">玄武区</option>
+                              <option value="0102">江宁区</option>
+                              <option value="0103">鼓楼区</option>                             
+                            </select>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+           
+        <!-- 提交工具栏 -->
+        <div class="submitBar">
+            <button type="submit" class="ui-btn-b ui-btn-green" id="commit" onclick="commit();">确认下单</button>
+        </div>
+       
+    </div>
+    <script type="text/javascript" src="js/zepto.min.js"></script>
+    <script type="text/javascript" src="js/frozen.js"></script>
+    <script type="text/javascript" src="js/update.js"></script>
+    
+ </body>
+</html>

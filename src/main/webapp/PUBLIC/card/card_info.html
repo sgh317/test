@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <!--<link rel="stylesheet" href="css/sm.min.css">-->
+    <link rel="stylesheet" href="../main/css/sm.css">
+    <link rel="stylesheet" href="../main/css/sm.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+	<script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    <script type="text/javascript" src="./../Stub/WxImageJsBean.js"></script>
+    <script language="javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    
+    <script type="text/javascript">	 
+    var currenUrl=location.href.split('#')[0];  	
+        $(function(){
+        	
+        	RpcContext.getBean('WxImageJsBean').getWXConfigData(encodeURI(currenUrl),{
+        		onSucess:function(result)
+        		{
+        			
+        			if(result.signature){
+            			try{
+            				wx.config({
+            					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            					appId: result.appId, // 必填，公众号的唯一标识
+            					timestamp: result.timestamp, // 必填，生成签名的时间戳
+            					nonceStr: result.nonceStr, // 必填，生成签名的随机串
+            					signature: result.signature,// 必填，签名
+            					jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','hideOptionMenu','showOptionMenu','hideMenuItems','closeWindow','chooseWXPay', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage']  // 必填，需要使用的JS接口列表
+            				});
+            				
+            				
+            			}catch(e){
+            				
+            				alert(e);
+            			}			
+            		}else
+            		{
+            			sessionStorage.setItem("_retMsg","系统错误！");
+    					window.location.replace("./../common/retpage/fail.html?random="+Math.random());
+            		}
+        		},
+        		onError:function(err)
+		        {
+		        	sessionStorage.setItem("_retMsg","系统错误！");
+					window.location.replace("./../common/retpage/fail.html?random="+Math.random());
+		        }
+        	});
+        	
+
+        	
+        	RpcContext.getBean('customerJsBean').queryCustomerDetailInfo(
+    				{
+    					onSucess:function(result)
+    				    {
+    						var res = eval('('+result+')');
+    						
+    						try{
+    						if(res.flag == 'Y'){
+    							
+    							$("#clientId").val(res.customerDetailInfo.clientId);
+    							$("#openId").val(res.customerDetailInfo.openId);
+    							$("#carNo").val(res.customerDetailInfo.carNo);
+    							$("#carNo").attr("readonly",true);
+    							$("#carType").val(res.customerDetailInfo.carType);
+    							$("#frameNo").val(res.customerDetailInfo.frameNo);
+    							$("#engineNo").val(res.customerDetailInfo.engineNo);
+    							$("#clientName").val(res.customerDetailInfo.clientName);
+    							//$("#clientIdNo").val(res.customerDetailInfo.clientIdNo);
+    							$("#clientAddress").val(res.customerDetailInfo.clientIdNo);
+                                $("#loadDate").val(res.customerDetailInfo.loadDate);
+    							$("#policyEnd").val(res.customerDetailInfo.policyEnd);
+    							
+    							if(res.orderInfo != null){
+    								$(".query-result,.update").show();
+    				                $(".button-green").removeClass("disabled");
+        							
+        							var html = '';
+        							
+        							if(res.carDetailList!=null)
+        								
+        							for(var i=0;i<res.carDetailList.length;i++){
+        								
+        								if(res.carDetailList[i].carSeq == res.orderInfo.carSeq)
+        									html+= "<option value='"+res.carDetailList[i].carSeq+"' selected>"+res.carDetailList[i].carSearial+"("+res.carDetailList[i].remark+" "+res.carDetailList[i].buyPrice+"元)</optin>";
+        								else
+        									html+= "<option value='"+res.carDetailList[i].carSeq+"'>"+res.carDetailList[i].carSearial+"("+res.carDetailList[i].remark+" "+res.carDetailList[i].buyPrice+"元)</optin>";
+        							}
+        							$("#carSeq").html(html);
+        							$("#carSeat").val(res.orderInfo.carSeat);
+        							$("#buyPrice").val(res.orderInfo.buyPrice);
+        							$("#orderId").val(res.orderInfo.orderId);
+    							}else{
+									
+    								$("#carInfoDiv").hide();
+    								
+    								if(res.carDetailList!=null)
+        								
+            						for(var i=0;i<res.carDetailList.length;i++){
+            								
+            							html+= "<option value='"+res.carDetailList[i].carSeq+"'>"+res.carDetailList[i].carSearial+"("+res.carDetailList[i].remark+" "+res.carDetailList[i].buyPrice+"元)</optin>";
+            						}
+        							$("#carSeq").html(html);
+        							$("#carSeat").val(res.carDetailList[0].carNum);
+        							$("#buyPrice").val(res.carDetailList[0].buyPrice);
+    							}
+    							
+    						}else{
+    							alert(res.message);
+    						}
+    						}catch(error){
+    							alert(error);
+    						}
+    					 },
+    					 onError:function(err)
+    					{
+    					       
+    					}
+    			});
+        });
+        
+        function searchCarInfo(){
+        	 
+        	 setTimeout(function () {
+                 $(".query-result,.update").show();
+                 $(".button-green").removeClass("disabled");
+             }, 2000);
+        	
+        }
+        
+        function changeCarType(){
+        	var carSeq = $("#carSeq").val();
+        	
+        	RpcContext.getBean('customerJsBean').queryCarDetailInfoByCarSeq(carSeq,
+        			{
+        			onSucess:function(result)
+				    {
+        				var res = eval('('+result+')');
+						
+						$("#carSeat").val(res.carDetailInfo.carNum);
+						$("#buyPrice").val(res.carDetailInfo.buyPrice);
+						
+				    },
+				    onError:function(err)
+					{
+					    alert(err);
+					}
+        			}
+        			
+        	);
+        }
+        
+        function saveOrderInfo(){
+        	
+        	//保存车辆信息
+        	var carNo = $("#carNo").val();
+        	var loadDate = $("#loadDate").val();
+        	var frameNo = $("#frameNo").val();
+        	var engineNo = $("#engineNo").val();
+        	var clientName = $("#clientName").val();
+        	var clientIdNo = $("#clientIdNo").val();
+        	var carClassifyCode = $("#carClassifyCode").val();
+        	var carSeat = $("#carSeat").val();
+        	var buyPrice = $("#buyPrice").val();
+        	var customerId = $("#customerId").val();
+        	var orderId = $("#orderId").val();
+        	var carSeq = $("#carSeq").val();
+        	 
+        	RpcContext.getBean('customerJsBean').saveOrderInfo(orderId,carNo,loadDate,frameNo,engineNo,clientName,clientIdNo,carClassifyCode,customerId,carSeat,buyPrice,carSeq,
+        		{
+        			onSucess:function(result)
+				    {
+        				var res = eval('('+result+')');
+        				
+        				if(res.flag == 'Y'){
+        					window.location.href = "card_insur.html";	
+        				}else{
+        					alert(res.message);
+        				}
+				    },
+				    onError:function(err)
+					{
+					    alert(err);
+					}
+        		}
+        			
+        	);
+        	
+        }
+        
+        
+        function uploadImage(claimId,parentDiv,imageType,i,localIds)
+        {
+        	 wx.uploadImage({
+	    		  
+		            localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
+		            isShowProgressTips: 1, // 默认为1，显示进度提示
+		            success: function (res) {
+		            	
+		                var serverId = res.serverId; // 返回图片的服务器端ID
+
+		                var paramterList=[];
+		                paramterList[0]={
+		                		serverId:serverId,
+		                		attributes:{
+		                			claimId:claimId //微信理赔申请号
+		                		}
+		                };
+		                
+		                RpcContext.getBean('WxImageJsBean').uploadClaimImages(paramterList,{
+		                	onSucess:function(rt){
+		                	     $(parentDiv+"_ADD").before("<li><img class='"+imageType+"'   id='"+serverId+"' src='"+rt[0].url+"'  onclick=\"previewImage('"+rt[0].url+"','"+parentDiv+"')\"/> <i class=\"delete\"></i></li>");
+		                		 if(i==(localIds.length-1))
+		                		 {
+		                			 
+		                		 }else
+		                		 {
+		                			 uploadImage(claimId,parentDiv,imageType,i+1,localIds)
+		                		 }
+		                	},
+		                	onError:function(err){
+		                		alert(err);
+		                	}
+		                });
+		            }
+		        });
+        }
+        
+        function chooseImage(claimId,parentDiv,imageType){
+        	wx.chooseImage({
+			    count: 9, // 默认9
+			    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+			    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+			    success: function (res) {
+			    	var localIds =[];
+			        localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+			        uploadImage("ClaimId",parentDiv,imageType,0,localIds);
+			    }
+			});
+        }
+			
+			
+        function previewImage(param,parentDiv){        	
+        	var size = $(parentDiv).children("li").size();
+        	var UrlArray = [];        
+        	for(var beg = 0;beg < size-1;beg++){        		
+        		UrlArray[beg]  = $(parentDiv).children("li:eq(" + beg + ")").children("img").attr("src");
+        	}
+        	wx.previewImage({
+ 			    current: param ,// 当前显示图片的http链接
+ 			   	urls: UrlArray
+ 			});
+        }        
+    </script>
+</head>
+<body>
+	<input id="orderId" type="hidden"/>
+	<input id="customerId" type="hidden"/>
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title"><i class="icon-car"></i><span>爱车信息</span></h1>
+        </header>
+        <nav class="bar bar-tab bar-button">
+            <a href="#" onclick="saveOrderInfo();" class="button button-fill button-green disabled external">下一步</a>
+        </nav>
+        <div class="content accordion-list step-content">
+            <div class="step-form">
+                <div class="form-style">
+                    <ul>
+                        <li>                        	
+                            <input type="text" id="carNo" class="input-text" placeholder="请输入车牌号" />
+                            <button type="button" class="btnSearch" onclick="searchCarInfo();">查询</button>
+                        </li>
+                    </ul>
+                </div>
+                <p class="search-tips">点击查询，填写完整信息后才能下一步哦！</p>
+            </div>
+            <div class="query-result" id="carInfoDiv">
+                <div class="form-style">
+                    <ul>
+                        <li>
+                            <select id="carSeq" class="input-text" onchange="changeCarType();">
+                        	</select>
+                            <p class="form-tips">请精确选择车型，以免影响报价</p>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text hasLabel" id="buyPrice" />
+                            <label class="input-label">购置价：</label>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text hasLabel" id="carSeat" />
+                            <label class="input-label">座位数：</label>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text hasLabel" id="frameNo" />
+                            <label class="input-label">车架号：</label>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text hasLabel" id="engineNo" />
+                            <label class="input-label">发动机号：</label>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text hasLabel" id="loadDate" />
+                            <label class="input-label">初登日期：</label>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text hasLabel" id="clientName"/>
+                            <label class="input-label">车主姓名：</label>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text hasLabel" id="clientIdNo" />
+                            <label class="input-label">身份证号：</label>
+                        </li>
+                        
+                        <li>
+                            <input type="text" class="input-text input-select" readonly />
+                            <input type="hidden" id="carClassifyCode" value="C1"/>
+                            <label class="input-label">使用性质：家庭自用型</label>
+                        </li>
+                    </ul>
+                </div>
+               	<div class="line-space"></div>
+            	<div id="carInfoDiv">
+             	<ul>
+            	   	<li>
+                        <div class="input-upload">
+                      	<label>驾驶证照上传（必填）</label>
+                      	<ul class="clearfix" id="IDImage">
+                    		<li class="upload-img" id="IDImage_ADD" onclick="chooseImage('ClaimId','#IDImage','01');">
+                      		</li>                      		
+                      	</ul>
+                      	</div>
+                     </li>
+                     <li>
+                        <div class="input-upload">
+                      	<label>行驶证快照上传</label>
+                      	<ul class="clearfix" id="IDImage2">
+                    		<li class="upload-img" id="IDImage2_ADD" onclick="chooseImage('ClaimId','#IDImage2','02');">
+                      		</li>                      		
+                      	</ul>
+                      	</div>
+                     </li>
+                     <li>
+                        <div class="input-upload">
+                      	<label>身份证快照上传</label>
+                      	<ul class="clearfix" id="IDImage3">
+                    		<li class="upload-img" id="IDImage3_ADD" onclick="chooseImage('ClaimId','#IDImage3','03');">
+                      		</li>                      		
+                      	</ul>
+                      	</div>
+                     </li>
+                </ul>
+           		</div>
+            </div>
+            
+        </div>
+    </div>
+    <script type="text/javascript" src="../main/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../main/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../main/js/sm-extend.min.js' charset='utf-8'></script>
+</body>
+</html>

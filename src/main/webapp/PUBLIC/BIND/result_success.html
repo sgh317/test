@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html id="html">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta NO_SESSION='Y'/>
+    <meta id="viewport" name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>订单提交成功</title>
+
+    <script type="text/javascript">   
+   	
+        (function(){
+            var device = window.innerWidth,scale = device / 640,meta = document.getElementById("viewport");
+            meta.setAttribute("content","initial-scale=" + scale + ", width=device-width, maximum-scale=1, user-scalable=no");
+            document.addEventListener("touchend",function(){return false})
+        })();
+		
+    </script>
+	
+	<!-- 底部说明样式 -->
+	<style>
+		.divBttm{position:relative;width:auto;height:160px;text-align:center;border:hidden}	
+		.divSub{position:absolute;width:auto;height:100px;bottom:0}
+	</style>
+	
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/normalize.css" />
+    <!-- 1f5私有样式 -->
+    <link rel="stylesheet" href="css/lars.wx.css?v=1.0" />
+</head>
+<body >
+    <div class="resultTip">
+        <i style="top:40px" class="icon iconSuccess"></i>
+        <p style="font-size:2.9rem;color:#727272;">
+		<b>您的订单已提交成功!</b>
+		</p>
+        <a href="#" onclick="javascript:window.close();" class="linkButton">返回微信</a>
+    </div>
+	
+	<div class="divBttm">
+		<div class="divSub" style="font-size:1.1rem;color:#666666;padding-left:2.3rem;padding-right:2.3rem;bottom:0;">
+		我们将在<b>10分钟内</b>向您告知出单结果
+		<br/>
+		出单后点击“<b>线上保险</b>-<b>保单查询</b>”，可通过中国大地保险官方热线或官方网站，<b>验证保单真伪</b>
+		</div>
+	</div>
+</body>
+</html>

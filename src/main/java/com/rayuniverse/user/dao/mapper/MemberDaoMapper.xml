@@ -1,0 +1,45 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rayuniverse.user.dao.MemberDao">
+	
+	<resultMap id="userRM" type="com.rayuniverse.user.domain.MemberInfo">
+		<id property="openId" column="openid" />
+		<id property="userId" column="user_id"/>
+		<id property="nickName" column="nickname" />
+		<id property="userType" column="usertype" />
+		<id property="userPic" column="userpic" />
+		<id property="userMoney" column="usermoney" />
+		<id property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="getMemberInfo" parameterType="java.lang.String" resultMap="userRM">
+	 select openid,user_id,nickname,usertype,userpic,usermoney,create_time
+	 from WGQC_Member where openid=#{openId,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addNewMember" parameterType="com.rayuniverse.user.domain.MemberInfo" >
+	   insert into WGQC_Member(openid,user_id,nickname,usertype,userpic,usermoney,create_time)
+	   values(#{openId,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{nickName,jdbcType=VARCHAR},
+	   #{userType,jdbcType=VARCHAR},#{userPic,jdbcType=VARCHAR},#{userMoney,jdbcType=VARCHAR},now())
+	</insert>
+	
+	<insert id="addUserAddress" parameterType="com.rayuniverse.user.domain.AddressInfo" >
+	   insert into WGQC_Address(Address_id,user_id,dename,province,city,area,addressdetail,mobile,defaultaddr,create_time)
+	   values(#{Addressid,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{dename,jdbcType=VARCHAR},#{province,jdbcType=VARCHAR},
+	   #{city,jdbcType=VARCHAR},#{area,jdbcType=VARCHAR},#{addressdetail,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},
+	   #{defaultaddr,jdbcType=VARCHAR},now())
+	</insert>
+	
+	<update id="updateMemberInfo" parameterType="com.rayuniverse.user.domain.MemberInfo">
+		UPDATE WGQC_Member
+		SET nickname = #{nickName,jdbcType=VARCHAR},
+		    userpic = #{userPic,jdbcType=VARCHAR}, 
+		    usermoney = #{userMoney,jdbcType=VARCHAR}
+		WHERE user_id= #{userId,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteMemberInfo" parameterType="java.lang.String">
+		delete from WGQC_Member where user_id = #{userId,jdbcType=VARCHAR}
+	</delete>
+</mapper>

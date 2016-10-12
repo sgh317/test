@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.wchat.gw.cfg.dao.ConfigItemDao">
+  
+   <select id="selectTokenTicket"   resultType="java.util.HashMap"> 
+         select *  from  WX_TOKEN_TICKET_CONFIG t for update 
+   </select> 
+   
+
+   <update id="updateTokenTicket" parameterType="java.util.Map" >
+        update  WX_TOKEN_TICKET_CONFIG t set t.life_end=  DATE_ADD(sysdate(),INTERVAL 30 MINUTE)  , t.accesstoken=#{token}, t.JSAPI_TICKET=#{ticket}
+   </update>
+   
+     
+</mapper>

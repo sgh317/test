@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html id="html">
+<head lang="en">
+	<meta charset="UTF-8"/>  
+    <meta NO_SESSION='Y'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta id="viewport" name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>爱车信息</title>
+ 
+    
+    <script type="text/javascript">
+        (function(){
+            var device = window.innerWidth,scale = device / 640,meta = document.getElementById("viewport");
+            meta.setAttribute("content","initial-scale=" + scale + ", width=device-width, maximum-scale=1, user-scalable=no");
+            document.addEventListener("touchend",function(){return false})
+        })();
+        
+			 
+
+			 
+		function commit(){
+						
+            		 window.location.replace("./second.html");
+	    
+		}
+        
+        
+        
+        
+    </script>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/frozen.css" />
+    <!-- 1f5私有样式 -->
+    <link rel="stylesheet" href="css/lars.wx.css?v=1.0" />
+    
+</head>
+<body>
+ <!-- 页面主体 -->
+    <div class="pageMain pb100">
+     	 <div class="formBox">
+            <ul>
+              
+                <li>
+                    
+                  <input type="text" placeholder="车牌号" id="bankAccount" value="" onBlur="checkBankAccount()"/>
+                        
+                </li>
+                  <li>
+                   <div class="inputSelectList selectArrowDown">
+                        <select class="selectDefault" id="applyType" onBlur="checkApplyType()">
+                            <option value="">是否是新车</option>
+                            <option value="01">是</option>
+                            <option value="02">否</option>                                                  
+                        </select>
+                    </div>
+                </li>
+                 <li>
+                    <input type="text" placeholder="品牌型号" id="bankAccount" value="" onBlur="checkBankAccount()"/>
+                </li>
+                <li>
+                    <div class="inputSelectList selectArrowDown">
+                        <label>初登日期</label>
+                        <input type="date" placeholder="初登日期" id="dangerTime" onBlur="checkAccidentDate()"/>
+                    </div>
+                </li>
+                <li>
+                    <input type="text" placeholder="车主姓名" id="bankAccount" value="" onBlur="checkBankAccount()"/>
+                </li>
+                 <li>
+                    <div class="inputSelectList selectArrowDown">
+                        <select class="selectDefault" id="applyType" onBlur="checkApplyType()">
+                            <option value="">证件类型</option>
+                            <option value="01">身份证</option>
+                            <option value="02">护照</option>                                          
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <input type="text" placeholder="证件号码" id="bankAccount" value="" onBlur="checkBankAccount()"/>
+                </li> 
+            </ul>
+        </div>
+    
+        <div class="formBox">
+            <ul>
+                <li>
+                    <div class="formCard">
+                        <dl>
+                            <dt>
+                                <span>证件快照上传 <em>*</em></span>
+                                <div class="space"></div>
+                                <span class="edit">编辑</span>
+                            </dt>
+                            <dd>
+                                <ul class="updateList" id="IDImage" >
+                                    <li  class="btnUpdate" id="IDImage_ADD" onclick="chooseImage('ClaimId','#IDImage','01');"></li>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>              
+                </li>
+            </ul>
+        </div>
+        <!-- 提交工具栏 -->
+        <div class="submitBar">
+            <button type="submit" class="ui-btn-b ui-btn-green" id="commit" onclick="commit();">下一步</button>
+        </div>
+       
+    </div>
+ 
+    
+ </body>
+</html>

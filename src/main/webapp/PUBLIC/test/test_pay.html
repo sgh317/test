@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="../main/css/sm.css">
+    <link rel="stylesheet" href="../main/css/sm.min.css">
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+    
+    <!-- 
+    <link rel="stylesheet" href="../WGQC/css/sm.min.css">
+    <link rel="stylesheet" href="../WGQC/css/sm-extend.min.css">
+    <link rel="stylesheet" href="../WGQC/css/ddcx.css?v=1.0" />
+    -->
+    
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    <script type="text/javascript" src="./../Stub/WxImageJsBean.js"></script>
+    <script type="text/javascript" src="./../Stub/basicImageJSBean.js"></script>
+    <script type="text/javascript" src="./../Stub/WXPaySrv.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		var currenUrl=location.href.split('#')[0]; 
+    	RpcContext.getBean('WxImageJsBean').getWXConfigData(encodeURI(currenUrl),{
+    		onSucess:function(result)
+    		{
+    			
+    			if(result.signature){
+        			try{
+        				wx.config({
+        					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        					appId: result.appId, // 必填，公众号的唯一标识
+        					timestamp: result.timestamp, // 必填，生成签名的时间戳
+        					nonceStr: result.nonceStr, // 必填，生成签名的随机串
+        					signature: result.signature,// 必填，签名
+        					jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','hideOptionMenu','showOptionMenu','hideMenuItems','closeWindow','chooseWXPay', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage']  // 必填，需要使用的JS接口列表
+        				});
+        				
+        				
+        			}catch(e){
+        				
+        				alert(e);
+        			}			
+        		}else
+        		{
+        			sessionStorage.setItem("_retMsg","系统错误！");
+					window.location.replace("./../common/retpage/fail.html?random="+Math.random());
+        		}
+    		},
+    		onError:function(err)
+	        {
+	        	sessionStorage.setItem("_retMsg","系统错误！");
+				window.location.replace("./../common/retpage/fail.html?random="+Math.random());
+	        }
+    	});
+    	
+    	wx.ready(function(){
+    		wx.chooseWXPay({
+				timestamp: '1452959567909', // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                nonceStr: 'GtxzPOtUFD2D3iyQ', // 支付签名随机串，不长于 32 位
+                package: 'prepay_id=wx2016011623524424c396cf4e0723873901', // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                paySign: 'B52D5531C5D952F75BD966ADB89ADB85', // 支付签名
+                complete: function (resinfo) {
+               			
+                    // 支付成功后的回调函数
+                    alert('123123123');
+                    alert(resinfo.errMsg);
+                    }
+                }); 
+    	});
+	});
+	</script>
+	</head>
+	<body>
+	</body>
+</html>
+	
+	
+	

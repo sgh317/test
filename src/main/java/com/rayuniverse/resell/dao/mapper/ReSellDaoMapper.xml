@@ -1,0 +1,52 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.resell.dao.ReSellDao">
+
+	<select id="getOrderStatus" parameterType="com.rayuniverse.domain.OrderDetailDomain" resultType="com.rayuniverse.domain.OrderDetailDomain">
+		select  o.order_status        orderStatus,
+			    o.pay_amount         payAmount,
+			    o.order_type         orderType,
+			    c.client_name        clientName,
+			    o.policy_no         policyNo,
+			    c.car_no         carNo,
+			    o.open_id         openId			    
+		  from order_detail_info o,
+		       client_detail_info c
+		 where o.order_id = #{orderId}
+		   and o.open_id = c.open_id		   	  
+	</select>
+	
+	<update id="reSellPolicyNo" parameterType="com.rayuniverse.domain.OrderDetailDomain">
+		update order_detail_info
+			set policy_no = #{policyNo},
+				return_time = now(),
+				order_status = '03'
+			where order_id = #{orderId, jdbcType=INTEGER}
+	</update>
+	
+	<update id="confirmAmount" parameterType="com.rayuniverse.domain.OrderDetailDomain">
+		update order_detail_info
+		   set discount_amount = #{discountAmount},		     
+		       order_status = '02'
+		where order_id = #{orderId} 
+	</update>
+	
+	<select id="queryOrderParameter" parameterType="java.lang.String" resultType="java.util.HashMap">
+		select order_id,
+		       parameter_key,
+		       key_value,
+		       parameter_desc
+		  from order_info_parameter
+		 where order_id = #{orderId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryNetFullInfo" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT t.net_name,
+		       t.net_address
+  		  FROM basic_net_jsdd_define t
+ 		 WHERE t.net_code = #{netCode,jdbcType=VARCHAR}
+	</select>
+			
+</mapper>

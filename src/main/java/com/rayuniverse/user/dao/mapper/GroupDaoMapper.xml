@@ -1,0 +1,93 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rayuniverse.user.dao.GroupDao">
+	<sql id="prefixSql">
+		<if test="pageSize != null and  pageSize != '' and  pageSize != 0"> 
+			SELECT * FROM (select row_.*, rownum start_rownum_ from
+			(
+			</if>
+		</sql>
+		<sql id="suffixSql">
+			<if test="pageSize != null and  pageSize != '' and  pageSize != 0"> 
+			<![CDATA[
+			) row_ WHERE rownum <= #{startIndex,jdbcType=NUMERIC}+#{pageSize,jdbcType=NUMERIC} )  WHERE start_rownum_ > #{startIndex,jdbcType=NUMERIC}
+			]]>
+		</if>
+	</sql>
+	
+	<resultMap id="groupRM" type="com.rayuniverse.user.domain.GroupInfo">
+		<id property="id" column="id" />
+		<id property="code" column="code"/>
+		<id property="name" column="name" />
+		<id property="desc" column="desc" />
+		<id property="flag" column="flag" />
+	</resultMap>
+	
+
+	<select id="getGroupInfoById" parameterType="java.lang.String" resultMap="groupRM">
+	 SELECT t.ID, t.code, t.name, t.`desc`, t.flag
+	 FROM user_group t
+	 where t.id=#{id,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getGroupInfoByCode" parameterType="java.lang.String" resultMap="groupRM">
+	 SELECT t.ID, t.code, t.name, t.`desc`, t.flag
+	 FROM user_group t
+	 where t.code=#{code,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addNewGroup" parameterType="com.rayuniverse.user.domain.GroupInfo" >
+	   insert into user_group(id,code,name,`desc`,flag) values(
+	   		#{id,jdbcType=VARCHAR},
+	   		#{code,jdbcType=VARCHAR},
+	   		#{name,jdbcType=VARCHAR},
+	   		#{desc,jdbcType=VARCHAR},
+	   		'1')
+	</insert>
+	
+	<update id="updateGroupInfo" parameterType="com.rayuniverse.user.domain.GroupInfo">
+		UPDATE user_group
+		SET code = #{code,jdbcType=VARCHAR},
+		    NAME = #{name,jdbcType=VARCHAR}, 
+		    `desc` = #{desc,jdbcType=VARCHAR}, 
+		    flag = #{flag,jdbcType=VARCHAR}
+		WHERE id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteGroupById" parameterType="java.lang.String">
+		UPDATE user_group SET flag = 0 WHERE id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryGroupList" parameterType="java.util.HashMap" resultMap="groupRM">
+		<include refid="prefixSql"/>
+		SELECT t.ID, t.code, t.name, t.`desc`, t.flag
+		  FROM user_group t
+		 WHERE 1 = 1
+		 <if test="code != null and code != ''">
+		 	and t.code like CONCAT(#{code,jdbcType=VARCHAR},'%')
+		 </if>
+		 <if test="name != null and name != ''">
+		 	and t.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		 </if>
+		 <if test="desc != null and desc != ''">
+		 	and t.desc like CONCAT('%',#{desc,jdbcType=VARCHAR},'%')
+		 </if>
+		 <if test="flag != null and flag != ''">
+		 	and t.flag = #{flag,jdbcType=VARCHAR}
+		 </if>
+		 <include refid="suffixSql"/>
+	</select>
+	
+	<select id="getGroupResource" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT gtr.resource_id FROM group_to_resource gtr WHERE gtr.group_id = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteGroupResource" parameterType="java.lang.String">
+		DELETE FROM group_to_resource WHERE group_id = #{id,jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertGroupResource" parameterType="java.util.HashMap">
+		INSERT INTO group_to_resource(group_id, resource_id) VALUES(#{groupId,jdbcType=VARCHAR}, #{resId,jdbcType=VARCHAR})
+	</insert>
+</mapper>

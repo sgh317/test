@@ -1,0 +1,590 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.customer.dao.CustomerDao">
+
+	<select id="countClientInfo" parameterType="com.rayuniverse.domain.CustomerDetailDomain" resultType="java.lang.Integer">
+		select count(*)
+		  from client_detail_info
+		 where #{clientName,jdbcType=VARCHAR} = client_name
+		   and #{mobileNo,jdbcType=VARCHAR} = mobile_no
+		   and #{carNo,jdbcType=VARCHAR} = car_no
+	</select>
+	
+	
+	<insert id="insertClientInfo" parameterType="com.rayuniverse.domain.CustomerDetailDomain">
+		insert into client_detail_info(client_name,
+									   mobile_no,
+									   car_no,
+									   client_integral,
+									   car_type,
+									   frame_no,
+									   engine_no,
+									   client_id_no,
+									   client_address,
+									   load_date,
+                                	   policy_end,
+                                	   trans_times,
+                                	   trans_amount,
+                                	   business_times,
+                                	   business_amount,
+									   import_time,
+                                	   back2_trans,
+                                	   back2_tr_amount,
+                                       back2_business,
+                                	   back2_bu_amount,
+                                	   back3_trans,
+                                	   back3_tr_amount,
+                                	   back3_business,
+                                	   back3_bu_amount)
+		                        values(#{clientName,jdbcType=VARCHAR},
+		                               #{mobileNo,jdbcType=VARCHAR},
+		                               #{carNo,jdbcType=VARCHAR},
+		                               #{clientIntegral,jdbcType=VARCHAR},
+		                               #{carType,jdbcType=VARCHAR},
+		                               #{frameNo,jdbcType=VARCHAR},
+		                               #{engineNo,jdbcType=VARCHAR},
+		                               #{clientIdNo,jdbcType=VARCHAR},
+		                               #{clientAddress,jdbcType=VARCHAR},
+		                               #{loadDate,jdbcType=VARCHAR},
+		                               #{policyEnd,jdbcType=VARCHAR},
+		                               #{transTimes,jdbcType=INTEGER},
+		                               #{transAmount,jdbcType=VARCHAR},
+		                               #{businessTimes,jdbcType=INTEGER},
+		                               #{businessAmount,jdbcType=VARCHAR},
+		                               now(),
+								       #{transTimesBack2,jdbcType=INTEGER},
+    								   #{transAmountBack2,jdbcType=VARCHAR},
+    								   #{businessTimesBack2,jdbcType=INTEGER},
+    								   #{businessAmountBack2,jdbcType=VARCHAR},
+    								   #{transTimesBack3,jdbcType=INTEGER},
+    								   #{transAmountBack3,jdbcType=VARCHAR},
+    								   #{businessTimesBack3,jdbcType=INTEGER},
+    								   #{businessAmountBack3,jdbcType=VARCHAR}
+		                               );
+	</insert>
+	
+	<select id="queryClientInfoByParameters" parameterType="com.rayuniverse.domain.CustomerDetailDomain" resultType="com.rayuniverse.domain.CustomerDetailDomain">
+		select client_name        clientName,
+		       mobile_no          mobileNo,
+		       car_no             carNo,
+		       client_id          clientId,
+		       open_id            openId,
+		       follow_time        followTime,
+		       given_type         givenType,
+			   import_time        importTime,
+			   given_time         givenTime,
+			   client_integral    clientIntegral
+		  from client_detail_info
+		 where  mobile_no =#{mobileNo,jdbcType=VARCHAR}
+		   and car_no = #{carNo,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="effectClient" parameterType="com.rayuniverse.domain.CustomerDetailDomain">
+		update client_detail_info
+		   set client_integral = #{clientIntegral},
+		       open_id = #{openId,jdbcType=VARCHAR},
+		       follow_time = now()
+		where  mobile_no = #{mobileNo,jdbcType=VARCHAR} 
+		   and car_no = #{carNo,jdbcType=VARCHAR} 
+	</update>
+	
+	<select id="queryImportClient" parameterType="java.util.HashMap" resultType="com.rayuniverse.domain.CustomerDetailDomain">
+		<if test="currentPage != null and  currentPage != ''">
+		 <![CDATA[
+		 select result.* from(
+		 select @rownum:=@rownum+1 AS rownum,rt.* from (SELECT @rownum:=0) r,( 
+		   ]]>
+		 </if>		       
+		select client_name     clientName,
+		       car_no          carNo,
+		       mobile_no       mobileNo,
+		       date_format(import_time,'%Y-%m-%d')     importTimeStr,
+		       client_integral clientIntegral,
+		       date_format(follow_time,'%Y-%m-%d')     followTimeStr
+		  from client_detail_info
+		 where import_time is not null
+		 <if test="clientName != null and  clientName != ''"> 
+		   and client_name = #{clientName,jdbcType=VARCHAR}
+		 </if>
+		 <if test="carNo != null and  carNo != ''"> 
+		   and car_no = #{carNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="mobileNo != null and  mobileNo != ''"> 
+		   and mobile_no = #{mobileNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="startDate != null and  startDate != ''">
+		 <![CDATA[ 
+		   and import_time > str_to_date(#{startDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		   ]]>
+		 </if>
+		 <if test="endDate != null and  endDate != ''">
+		 <![CDATA[ 
+		   and import_time < str_to_date(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d')+1
+		   ]]>
+		 </if>
+		 <if test="bindStartDate != null and  bindStartDate != ''">
+		 <![CDATA[ 
+		   and follow_time > str_to_date(#{bindStartDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		   ]]>
+		 </if>
+		 <if test="bindEndDate != null and  bindEndDate != ''">
+		 <![CDATA[ 
+		   and follow_time < str_to_date(#{bindEndDate,jdbcType=VARCHAR},'%Y-%m-%d')+1
+		   ]]>
+		 </if>
+		 order by client_id
+		 <if test="currentPage != null and  currentPage != ''">
+		 	) rt ) result
+		 	<![CDATA[ 
+		 	where result.rownum > (#{currentPage,jdbcType=NUMERIC}-1)*50
+		 	  and result.rownum <= #{currentPage,jdbcType=NUMERIC}*50
+		   ]]>
+		 </if>
+	</select>
+	
+	<select id="queryClientInfoByOpenId" parameterType="java.lang.String" resultType="com.rayuniverse.domain.CustomerDetailDomain">
+		select client_id    clientId,
+               car_no       carNo,
+               car_type     carType,
+               frame_no     frameNo,
+               engine_no    engineNo,
+               client_name  clientName,
+               client_id_no clientIdNo,
+               mobile_no    mobileNo,
+               client_address clientAddress,
+               load_date    loadDate,
+               policy_end   policyEnd,
+               trans_times  transTimes,
+               trans_amount  transAmount,
+               business_times businessTimes,
+               business_amount businessAmount,
+               follow_time  followTime,
+               given_type   givenType,
+               given_time   givenTime,
+               import_time  importTime,
+               client_integral clientIntegral,               
+               back3_trans transTimesBack3,
+    		   back3_tr_amount transAmountBack3,
+    		   back3_business businessTimesBack3,
+    	 	   back3_bu_amount businessAmountBack3,
+    		   back2_trans transTimesBack2,
+    		   back2_tr_amount transAmountBack2,
+    		   back2_business businessTimesBack2,
+    		   back2_bu_amount businessAmountBack2    		   
+		  from client_detail_info
+		 where open_id = #{openId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="countByOpenId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*)
+		  from client_detail_info
+		 where open_id = #{openId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateGivenDate" parameterType="java.util.HashMap">
+		update client_detail_info
+		   set given_time = now(),
+		       given_type = #{zsType,jdbcType=VARCHAR}
+		 where open_id = #{openId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryCarTypeList" parameterType="java.lang.String" resultType="com.rayuniverse.domain.CarTypeListDomain">
+		select remark remark,
+               load_date loadDate,
+               buy_price buyPrice,
+               swept_volume sweptVolume,
+               car_num carNum,
+               car_name carName,
+               car_serial carSearial,
+               car_categroy carCategory,
+               car_type  carType,
+               car_seq   carSeq
+		  from basic_car_type_info
+		 where car_type = #{carType,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryCarDetailInfoByCarSeq" parameterType="java.lang.String" resultType="com.rayuniverse.domain.CarTypeListDomain">
+		select remark remark,
+               load_date loadDate,
+               buy_price buyPrice,
+               swept_volume sweptVolume,
+               car_num carNum,
+               car_name carName,
+               car_serial carSearial,
+               car_categroy carCategory,
+               car_type  carType,
+               car_seq   carSeq
+		  from basic_car_type_info
+		 where car_seq = #{carSeq,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertOrderDetailInfo" parameterType="com.rayuniverse.domain.OrderDetailDomain">
+	
+		insert into order_detail_info(open_id,
+									  risk_name,
+									  risk_type,
+									  order_status,
+									  client_id,
+									  car_seat,
+									  buy_price,
+									  car_no,
+									  car_classify_type,
+									  load_date,
+									  car_seq,
+									  effect_date)
+								values(#{openId,jdbcType=VARCHAR},
+								       #{riskName,jdbcType=VARCHAR},
+								       #{riskType,jdbcType=VARCHAR},
+								       #{orderStatus,jdbcType=VARCHAR},
+								       #{clientId,jdbcType=VARCHAR},
+								       #{carSeat,jdbcType=VARCHAR},
+								       #{buyPrice,jdbcType=VARCHAR},
+								       #{carNo,jdbcType=VARCHAR},
+								       #{carClassifyType,jdbcType=VARCHAR},
+								       #{loadDate,jdbcType=VARCHAR},								       
+								       #{carSeq,jdbcType=VARCHAR},
+								       #{effectDate})				
+	</insert>
+	
+	<update id="updateOrderDetailInfo" parameterType="com.rayuniverse.domain.OrderDetailDomain">
+		update order_detail_info
+		   set risk_name = #{riskName},
+			   risk_type = #{riskType},
+			   order_status = #{orderStatus},
+			   client_id = #{clientId},
+			   car_seat = #{carSeat},
+			   buy_price = #{buyPrice},
+			   car_no = #{carNo},
+			   car_classify_type = #{carClassifyType},
+			   load_date = #{loadDate},
+			   car_seq = #{carSeq},
+			   effect_date = #{effectDate}
+		 where order_id = #{orderId}
+	</update>
+	
+	<delete id="deleteOrderRiskParameterInfo" parameterType="java.lang.String">
+		delete from order_risk_parameter
+		      where order_id = #{orderId}
+	</delete>
+	
+	<delete id="deleteOrderRiskInfo" parameterType="java.lang.String">
+		delete from order_risk_info
+		      where order_id = #{orderId}
+	</delete>
+	
+	<select id="queryOrderByTypeAndNotFinished" parameterType="java.lang.String" resultType="com.rayuniverse.domain.OrderDetailDomain">
+		select order_id orderId,
+			   open_id  openId,
+			   risk_name riskName,
+			   risk_type riskType,
+			   order_status orderStatus,
+			   client_id clientId,
+			   car_seat carSeat,
+			   buy_price buyPrice,
+			   car_no   carNo,
+			   car_classify_type carClassifyType,
+			   load_date loadDate,
+			   frame_no  frameNo,
+			   engine_no engineNo,
+			   client_name clientName,
+			   client_id_no clientIdNo,
+			   car_seq carSeq,
+			   pay_amount payAmount,
+			   sum_amount sumAmount,
+			   score      score,
+			   effect_date effectDate
+		from order_detail_info
+	   where open_id = #{openId}
+	     and risk_type = #{productType}
+	     and order_status in ('00','01','02')
+	</select>
+	
+	<select id="queryOrderByOrderId" parameterType="java.lang.String" resultType="com.rayuniverse.domain.OrderDetailDomain">
+		select order_id orderId,
+			   open_id  openId,
+			   risk_name riskName,
+			   risk_type riskType,
+			   order_status orderStatus,
+			   client_id clientId,
+			   car_seat carSeat,
+			   buy_price buyPrice,
+			   car_no   carNo,
+			   car_classify_type carClassifyType,
+			   load_date loadDate,
+			   frame_no  frameNo,
+			   engine_no engineNo,
+			   client_name clientName,
+			   client_id_no clientIdNo,
+			   car_seq carSeq,
+			   effect_date effectDate,
+			   score score,
+			   pay_amount payAmount
+		  from order_detail_info
+	     where order_id = #{orderId}
+	</select>
+	
+	<select id="queryProductListByOrderId" parameterType="java.lang.String" resultType="com.rayuniverse.domain.ProductDomain">
+		select product_code productCode,
+			   product_prem premium,
+			   product_amount amount,
+			   product_seq  productSeq,
+			   order_risk_conversion_prem conversionPrem
+		  from order_risk_info
+		 where order_id = #{orderId,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertOrderRiskInfo" parameterType="com.rayuniverse.domain.OrderRiskInfo">
+		insert order_risk_info(order_id,
+							   product_code,
+							   product_prem,
+							   product_amount,
+							   order_risk_conversion_prem)
+						values(#{orderId,jdbcType=VARCHAR},
+						       #{productCode,jdbcType=VARCHAR},
+						       #{productPrem,jdbcType=VARCHAR},
+						       #{productAmount,jdbcType=VARCHAR},
+						       #{productConversionPrem,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="queryProductSeq" parameterType="java.util.HashMap" resultType="java.lang.String">
+		select product_seq
+		  from order_risk_info
+		 where order_id = #{orderId,jdbcType=VARCHAR}
+		   and product_code = #{productCode,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertOrderRiskParameterInfo" parameterType="com.rayuniverse.domain.OrderRiskParameter">
+		insert order_risk_parameter(order_id,
+									product_seq,
+									parameter_key,
+									parameter_key_desc,
+									key_value)
+		                     values(#{orderId,jdbcType=VARCHAR},
+		                            #{productSeq,jdbcType=VARCHAR},
+		                            #{parameterKey,jdbcType=VARCHAR},
+		                            #{parameterKeyDesc,jdbcType=VARCHAR},
+		                            #{keyValue,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateClientIntegral" parameterType="com.rayuniverse.domain.CustomerDetailDomain">
+		update  client_detail_info
+		   set  client_integral = #{clientIntegral},
+		        client_name = #{clientName},
+		        client_id_no = #{clientIdNo}
+		 where  open_id = #{openId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="updateOrderPremInfo" parameterType="com.rayuniverse.domain.OrderDetailDomain">
+		update order_detail_info
+		   set sum_amount = #{sumAmount,jdbcType=VARCHAR},
+		       pay_amount = #{payAmount,jdbcType=VARCHAR},
+		       score = #{score,jdbcType=VARCHAR}
+		 where order_id = #{orderId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryRiskParameterByProductAndOrder" resultType="com.rayuniverse.domain.OrderRiskParameter" parameterType="java.util.HashMap">
+		select order_id orderId,
+			   product_seq productSeq,
+			   parameter_key parameterKey,
+			   parameter_key_desc parameterKeyDesc,
+			   key_value keyValue
+		  from order_risk_parameter
+		 where order_id = #{orderId}
+		   and product_seq = #{productSeq}
+	</select>
+	
+	<select id="queryAreaByCity" parameterType="java.lang.String" resultType="com.rayuniverse.domain.AreaDomain">
+		select area_code areaCode,
+		       area_desc areaDesc,
+		       city_code cityCode
+		  from basic_area_jsdd_define
+		 where city_code = #{cityCode}
+	</select>
+	
+	<select id="queryNetByArea" parameterType="java.lang.String" resultType="com.rayuniverse.domain.NetDomain">
+		select net_code netCode,
+		       net_name netName,
+		       net_address netAddress,
+		       area_code areaCode
+		  from basic_net_jsdd_define
+		 where area_code = #{areaCode}
+	</select>
+	
+	<update id="submitOrder" parameterType="com.rayuniverse.domain.OrderDetailDomain">
+		update order_detail_info
+		   set order_status = #{orderStatus,jdbcType=VARCHAR},
+		       order_type = #{orderType,jdbcType=VARCHAR},
+		       pay_amount = #{payAmount,jdbcType=VARCHAR},
+		       submit_time = now(),
+		       effect_date = #{effectDate}
+		 where order_id = #{orderId,jdbcType=VARCHAR} 
+	</update>
+	
+	<insert id="insertOrderParameter" parameterType="com.rayuniverse.domain.OrderParameterDomain">
+		insert into order_info_parameter(order_id,
+		                                 parameter_key,
+		                                 key_value)
+		                          values(#{orderId,jdbcType=VARCHAR},
+		                          	     #{parameterKey,jdbcType=VARCHAR},
+		                          	     #{parameterValue,jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insertHYXOrder" parameterType="com.rayuniverse.domain.OrderDetailDomain">
+		insert into order_detail_info(open_id,
+									  risk_name,
+									  risk_type,
+									  order_type,
+									  order_status,
+									  pay_amount,
+									  sum_amount,
+									  submit_time,
+									  effect_date,
+									  score)
+								values(#{openId,jdbcType=VARCHAR},
+								       #{riskName,jdbcType=VARCHAR},
+								       #{riskType,jdbcType=VARCHAR},
+								       #{orderType,jdbcType=VARCHAR},
+								       #{orderStatus,jdbcType=VARCHAR},
+								       #{payAmount,jdbcType=VARCHAR},
+								       #{sumAmount,jdbcType=VARCHAR},
+								       now(),
+								       #{effectDate},
+								       #{score,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="deleteOrderRiskParameter" parameterType="java.lang.String">
+		delete from order_risk_parameter where order_id = #{orderId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryClientParameterInfo" parameterType="java.util.HashMap" resultType="com.rayuniverse.domain.ClientInfoParameterDomain">
+		select open_id openId,
+		       parameter_type  parameterType,
+		       parameter_value parameterValue
+		  from client_info_parameter
+	     where open_id = #{openId,jdbcType=VARCHAR}
+	       and parameter_type = #{parameterKey,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="countParameterKey" parameterType="com.rayuniverse.domain.ClientInfoParameterDomain" resultType="java.lang.Integer">
+		select count(*) from client_info_parameter
+		 where open_id = #{openId,jdbcType=VARCHAR}
+	       and parameter_type = #{parameterKey,jdbcType=VARCHAR} 
+	</select>
+	
+	<update id="updateClientParameterInfo" parameterType="com.rayuniverse.domain.ClientInfoParameterDomain">
+		update client_info_parameter
+		   set parameter_value = #{parameterValue,jdbcType=VARCHAR}
+		 where open_id = #{openId,jdbcType=VARCHAR}
+	       and parameter_type = #{parameterKey,jdbcType=VARCHAR} 
+	</update>
+	
+	<insert id="insertClientParameterInfo" parameterType="com.rayuniverse.domain.ClientInfoParameterDomain">
+		insert into client_info_parameter(open_id,
+		       							  parameter_type,
+		       							  parameter_value)
+		       						values(#{openId,jdbcType=VARCHAR},
+		       							   #{parameterKey,jdbcType=VARCHAR},
+		       							   #{parameterValue,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateClientInfoHYX" parameterType="java.util.HashMap">
+		update client_detail_info
+		   set client_name = #{applicantName,jdbcType=VARCHAR}, 
+		       client_id_no = #{applicantIdNo,jdbcType=VARCHAR}
+		 where open_id = #{openId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="queryHYXConunt" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*)
+		  from order_detail_info
+		 where risk_type= '02'
+		   and open_id = #{openId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="deleteImageInfo" parameterType="java.lang.String">
+		delete from order_image_info where order_id = #{orderId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateIntegral" parameterType="java.util.HashMap">
+		UPDATE client_detail_info t
+   		   SET t.client_integral = #{clientIntegral,jdbcType=VARCHAR},
+       		   t.client_name = #{clientName,jdbcType=VARCHAR},
+       		   t.client_id_no = #{clientIdNo,jdbcType=VARCHAR} 
+ 		 WHERE t.open_id = #{openId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="countOrderByOpenId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select count(*)
+		  from order_detail_info 
+		 where open_id = #{openId,jdbcType=VARCHAR}
+		   and risk_type = #{riskType,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryTotalPageSize" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select count(*)
+		  from client_detail_info
+		 where import_time is not null
+		 <if test="clientName != null and  clientName != ''"> 
+		   and client_name = #{clientName,jdbcType=VARCHAR}
+		 </if>
+		 <if test="carNo != null and  carNo != ''"> 
+		   and car_no = #{carNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="mobileNo != null and  mobileNo != ''"> 
+		   and mobile_no = #{mobileNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="startDate != null and  startDate != ''">
+		 <![CDATA[ 
+		   and import_time > str_to_date(#{startDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		   ]]>
+		 </if>
+		 <if test="endDate != null and  endDate != ''">
+		 <![CDATA[ 
+		   and import_time < str_to_date(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d')+1
+		   ]]>
+		 </if>
+		 <if test="bindStartDate != null and  bindStartDate != ''">
+		 <![CDATA[ 
+		   and follow_time > str_to_date(#{bindStartDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		   ]]>
+		 </if>
+		 <if test="bindEndDate != null and  bindEndDate != ''">
+		 <![CDATA[ 
+		   and follow_time < str_to_date(#{bindEndDate,jdbcType=VARCHAR},'%Y-%m-%d')+1
+		   ]]>
+		 </if>
+	</select>
+	
+	<update id="updateClientBind" parameterType="java.lang.String">
+		UPDATE client_detail_info 
+		   SET open_id = NULL ,
+		       follow_time = NULL,
+		       client_integral = 0
+		 WHERE open_id = #{openId,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteClientBind" parameterType="java.lang.String">
+		DELETE FROM client_info_parameter WHERE open_id = #{openId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryOrderIdByClientId" parameterType="java.lang.String" resultType="java.lang.String">
+		select order_id 
+		  from order_detail_info 
+		 where open_id = #{openId,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteOrderDetail" parameterType="java.lang.String">
+		DELETE FROM order_detail_info WHERE order_id = #{orderId,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteOrderParameter" parameterType="java.lang.String">
+		DELETE FROM order_info_parameter WHERE order_id = #{orderId,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteOrderRisk" parameterType="java.lang.String">
+		DELETE FROM order_risk_info WHERE order_id = #{orderId,jdbcType=VARCHAR}
+	</delete>
+	
+</mapper>

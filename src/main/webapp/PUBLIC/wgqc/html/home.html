@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>万果千仓</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="../lib/sui/sm.min.css">
+    <link rel="stylesheet" href="../lib/slick/slick.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../css/app.css?v=1.0" />
+</head>
+<body>
+<div class="page-group">
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav bar-index">
+            <div class="pull-left">
+                <span class="location">扬州</span>
+            </div>
+            <h1 class="title">
+                <div class="top-link">
+                    <a href="" class="current">水果</a>
+                    <a href="">生鲜</a>
+                </div>
+            </h1>
+            <div class="pull-right">
+                <a class="link-item" href="javascript:void(0)" data-href="../login/login.html">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJvAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkI1OEFDRjAyNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkI1OEFDRjAzNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QjU4QUNGMDA3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QjU4QUNGMDE3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6fJFQCAAACCElEQVR42sSX3XGDMAzHDQuEDdINwkPeQycoG4RO0HSCskHpBCEb0A3Iex7IBskGZIJUvvu7p6P4A3Co7nQ+A7Z/liUhB/f7XdhkvV6n1MSkSefVhbQhrU6n00WMlEAHQQtH1OygC4e5jqQ5wdReIAggo6boLH7DrtUiT7DOqgcmJZh2NAQBlNRs2aMDaanbISyWwWJLBpzQmGYwRAfgKid3NS9gctK3oSC/EDSJ3Mknnp8xQTv0fHGUe7aR2DZPiIFP2MUkACk0TlrzFd0lfEtYIQCgnDAbC9AB+UZ3i03qIfCB8oMvV2dykAx+IZiVtZZIWb/wBCBgzQrd1AahsuBxStbTSIl2QRZPXCBqzwCiE96xCUI5ZCMeI2e0kS06pLQPgmhdQ9RIOlEiF4ib7cwmyspmkZD5QuJ79U5ENCYIFcsbW2YbISo/3Ew/Qg6hspwvK0RsvsroE0hQB/Q/aLAv3yhZ+Ocu0cE/KrGLKVaQFnhRRZEtE4fIbPKjd+bN9ViQnnpi55wnCKRgxyJBGlO+1wDkDMA5AbrWmIXuFw+LpThSXmMuXIukIdX2FbHesEwonXjTV21D9y4gtntHgclc7h1n3DsqjX9oQQLbDQwwCTTu+TnJJFQbjssKErhcAz0kLiNIKGaQTgX+JwXMAmEDmQ1CBzKbT1h85PlfIFitIa+IxY8AAwAGgwRpGv8A/gAAAABJRU5ErkJggg==" />
+                </a>
+            </div>
+        </header>
+        <nav class="bar bar-tab">
+            <a class="tab-item external active" href="home.html">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="list.html">
+                <span class="icon icon-health"></span>
+                <span class="tab-label">分类</span>
+            </a>
+            <a class="tab-item external" href="cart.html">
+                <span class="icon icon-tips"></span>
+                <span class="tab-label">购物车</span>
+                <span class="badge">2</span>
+            </a>
+            <a class="tab-item external" href="my.html">
+                <span class="icon icon-me"></span>
+                <span class="tab-label">我的</span>
+            </a>
+        </nav>
+        <div class="content">
+            <div id="pageIndex" class="page-section page-section-current">
+                <div id="indexSlider" class="slider index-slider">
+                    <div class="slider-item">
+                        <img src="../pic/pic_750x342_1.jpg" />
+                    </div>
+                    <div class="slider-item">
+                        <img src="../pic/pic_750x342_2.jpg" />
+                    </div>
+                </div>
+                <div id="sectionLink" class="section-link">
+                    <ul>
+                        <li>
+                            <a class="link-item" href="javascript:void(0)" data-href="list.html">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjlDRjQ2M0Y5NzNEMTExRTY5QUI0RUFEMjZENDlBMTI1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjlDRjQ2M0ZBNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OUNGNDYzRjc3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OUNGNDYzRjg3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7WLKQVAAARrUlEQVR42uxdCXhU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" />
+                                <h2>全部商品</h2>
+                                <div class="ripple"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link-item" href="javascript:void(0)" data-href="shandianpeisong.html">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjlDRjQ2M0ZENzNEMTExRTY5QUI0RUFEMjZENDlBMTI1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjlDRjQ2M0ZFNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OUNGNDYzRkI3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OUNGNDYzRkM3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4ir7YtAAAPGUlEQVR42uxda2xc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" />
+                                <h2>闪电配送</h2>
+                                <div class="ripple"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link-item" href="javascript:void(0)" data-href="my_order.html">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkI1OEFDRUZBNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkI1OEFDRUZCNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OUNGNDYzRkY3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OUNGNDY0MDA3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5Q6+EbAAAM3UlEQVR42uxdDWyV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" />
+                                <h2>我的订单</h2>
+                                <div class="ripple"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a id="linkAdd" class="link-item" href="javascript:void(0)" data-href="dianpufenbu.html">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkI1OEFDRUZFNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkI1OEFDRUZGNzNEMTExRTY5QUI0RUFEMjZENDlBMTI1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QjU4QUNFRkM3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QjU4QUNFRkQ3M0QxMTFFNjlBQjRFQUQyNkQ0OUExMjUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz55cCS6AAAO0ElEQVR42uxdaWxV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" />
+                                <h2>店铺分布</h2>
+                                <div class="ripple"></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="index-hot">
+                    <div class="buttons-tab">
+                        <a href="#tab1" class="tab-link active button">热点推荐</a>
+                        <a href="#tab2" class="tab-link button">今日特价</a>
+                    </div>
+                    <div class="content-block">
+                        <div class="tabs">
+                            <div id="tab1" class="tab active">
+                                <div class="product-list">
+                                    <ul>
+                                        <li>
+                                            <a href="detail.html">
+                                                <div class="pro-img">
+                                                    <img src="../pic/pic_250x200_1.jpg" />
+                                                </div>
+                                                <div class="pro-info">
+                                                    <h2 class="pro-name">泰国金枕榴莲</h2>
+                                                    <p class="pro-intro">青泰国直供 气味浓烈 肉软糯香</p>
+                                                    <div>
+                                                        <span class="pro-price">¥ 69.00</span>
+                                                        <span class="pro-specifications">/约6斤</span>
+                                                    </div>
+                                                    <button type="button" class="btn-cart">加入购物车</button>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="detail.html">
+                                                <div class="pro-img">
+                                                    <img src="../pic/pic_250x200_2.jpg" />
+                                                </div>
+                                                <div class="pro-info">
+                                                    <h2 class="pro-name">泰国进口金柚</h2>
+                                                    <p class="pro-intro">青柚1个 单果800-1000g</p>
+                                                    <div>
+                                                        <span class="pro-price">¥ 29.90</span>
+                                                        <span class="pro-specifications">/4个</span>
+                                                    </div>
+                                                    <button type="button" class="btn-cart">加入购物车</button>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="detail.html">
+                                                <div class="pro-img">
+                                                    <img src="../pic/pic_250x200_3.jpg" />
+                                                </div>
+                                                <div class="pro-info">
+                                                    <h2 class="pro-name">辽宁丹东新鲜草莓</h2>
+                                                    <p class="pro-intro">个大味甜 牛奶草莓</p>
+                                                    <div>
+                                                        <span class="pro-price">¥ 46.00</span>
+                                                        <span class="pro-specifications">/约2斤</span>
+                                                    </div>
+                                                    <button type="button" class="btn-cart">加入购物车</button>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="view-more">
+                                    <a href="" class="btn-more">查看更多</a>
+                                </div>
+                            </div>
+                            <div id="tab2" class="tab">
+                                <div class="product-list">
+                                    <ul>
+                                        <li>
+                                            <a href="detail.html">
+                                                <div class="pro-img">
+                                                    <img src="../pic/pic_250x200_1.jpg" />
+                                                </div>
+                                                <div class="pro-info">
+                                                    <h2 class="pro-name">泰国金枕榴莲</h2>
+                                                    <p class="pro-intro">青泰国直供 气味浓烈 肉软糯香</p>
+                                                    <div class="flex-box end">
+                                                        <div>
+                                                            <span class="pro-price">¥ 69.00</span>
+                                                            <span class="pro-specifications">/约6斤</span>
+                                                        </div>
+                                                        <div class="pro-price-old">
+                                                            <span>原价:</span>
+                                                            <span class="line-through">39.9</span>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn-cart">加入购物车</button>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="detail.html">
+                                                <div class="pro-img">
+                                                    <img src="../pic/pic_250x200_2.jpg" />
+                                                </div>
+                                                <div class="pro-info">
+                                                    <h2 class="pro-name">泰国进口金柚</h2>
+                                                    <p class="pro-intro">青柚1个 单果800-1000g</p>
+                                                    <div class="flex-box end">
+                                                        <div>
+                                                            <span class="pro-price">¥ 29.00</span>
+                                                            <span class="pro-specifications">/约6斤</span>
+                                                        </div>
+                                                        <div class="pro-price-old">
+                                                            <span>原价:</span>
+                                                            <span class="line-through">39.9</span>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn-cart">加入购物车</button>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="detail.html">
+                                                <div class="pro-img">
+                                                    <img src="../pic/pic_250x200_3.jpg" />
+                                                </div>
+                                                <div class="pro-info">
+                                                    <h2 class="pro-name">辽宁丹东新鲜草莓</h2>
+                                                    <p class="pro-intro">个大味甜 牛奶草莓</p>
+                                                    <div class="flex-box end">
+                                                        <div>
+                                                            <span class="pro-price">¥ 46.00</span>
+                                                            <span class="pro-specifications">/约6斤</span>
+                                                        </div>
+                                                        <div class="pro-price-old">
+                                                            <span>原价:</span>
+                                                            <span class="line-through">50.9</span>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn-cart">加入购物车</button>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../lib/zepto/zepto.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../lib/jquery/jquery-1.8.3.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+    Zepto.config = {
+        router:false   // 关闭页面路由
+    }
+</script>
+<script type="text/javascript" src="../lib/sui/sm.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../lib/slick/slick.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/app.js" charset="utf-8"></script>
+<script type="text/javascript">
+    Zepto(function() {
+        Zepto.init();  // 页面初始化
+    });
+</script>
+<script type="text/javascript">
+    
+    $(document).ready(function(){
+	    $('#indexSlider').slick({
+	        dots: true,
+	        infinite: true,
+	        speed: 300,
+	        slidesToShow: 1,
+	        adaptiveHeight: true,
+	        arrows:false,
+	        autoplay:true
+	    });
+	    
+        RpcContext.getBean('BmQueryJsBean').BmQuery(
+				{
+					onSucess : function(result) {
+						var res2 = result.orderbymonth;
+			    		var title2 = new Array();
+						var prems2 = new Array();
+			    		
+			        	if(res2 != null && res2.length > 0)
+			        	{
+			        		for(var i = 0; i < res2.length; i++)
+			        		{
+			        			var o = res2[i];
+			        			title2.push(o.month);
+			        			prems2.push(o.order_num);
+			        		}
+			        	}
+						option1.xAxis.data = title2;
+						option1.series[0].data = prems2;
+						 myChart2.hideLoading();
+						myChart2.setOption(option1);
+					}
+	        	});
+</script>
+</body>
+</html>

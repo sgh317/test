@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <link rel="stylesheet" href="../main/css/sm.css">
+    <link rel="stylesheet" href="../main/css/sm-extend.min.css">
+    
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+    <style type="text/css">
+        .page {
+            background-color:#ffce4e !important;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    function commit(){
+    	var clientName = $("#clientName").val();
+    	var mobileNo = $("#mobileNo").val();
+    	var carNo = ($("#carNo1").val()+$("#carNo2").val()+$("#carNo3").val()).toUpperCase();
+    	
+    	var alertInfo = '';
+    	if(mobileNo==null||mobileNo==''||mobileNo.search(/^(\+\d{2,3})?(13|14|15|17|18)?\d{9}$/)==-1){
+    		alertInfo += '您的手机号未正确填写\n';	
+    	}
+    	
+    	if(carNo==null||carNo==''||carNo.length!=7){
+    		alertInfo += '您的车牌号未正确填写\n';
+    	}
+    	
+    	if(alertInfo!=''){
+    		alert(alertInfo);
+    		return;
+    	}
+    		
+    	
+		RpcContext.getBean('customerJsBean').bindCustomerInfo(clientName,mobileNo,carNo,
+		{
+			onSucess:function(result)
+		    {
+				var res = eval('('+result+')');
+				if(res.flag == 'Y'){
+					alert('恭喜您，用户关联成功');
+					window.location.href = "../ZS/index.html";
+				}else{
+					alert(res.message);
+				}
+			 },
+			 onError:function(err)
+			{
+			       
+			}
+		});
+	}
+    </script>
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    <script language="javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+    <div class="page">
+        <nav class="bar bar-tab bar-button">
+            <a href="#" onclick="commit();" class="button button-fill button-green external">下一步</a>
+        </nav>
+        <div class="content accordion-list index-content">
+            <div class="index-form">
+                <div class="form-style">
+                    <ul>
+                        <li>
+                            <input type="text" class="input-text" placeholder="手机号码" id="mobileNo"/>
+                        </li>
+                        <!-- 姓名不用来验证，后续手工录入姓名 
+                        <li>
+                            <input type="text" class="input-text" placeholder="姓名" id="clientName"/>
+                        </li>
+                         -->
+                        <li class="clearfix">
+                            <div class="inputBox flex3">
+                                <select class="input-select" id="carNo1">
+                                	<option value="苏">苏</option>
+                                	<option value="浙">浙</option>
+                                	<option value="沪">沪</option>
+                                	<option value="皖">皖</option>
+                                	<option value="鲁">鲁</option>
+                                	<option value="赣">赣</option>
+                                	<option value="豫">豫</option>
+                                </select>
+                            </div>
+                            <div class="space">&nbsp;</div>
+                            <div class="inputBox flex3">
+                                <input type="text" class="input-text" placeholder="A" value="A" id="carNo2"/>
+                            </div>
+                            <div class="space">&nbsp;</div>
+                            <div class="inputBox flex4">
+                                <input type="text" class="input-text" placeholder="车牌号"  id="carNo3"/>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../main/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../main/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../main/js/sm-extend.min.js' charset='utf-8'></script>
+    <script type="text/javascript">
+        /* $(function() {
+            $.init();
+        }); */
+    </script>
+</body>
+</html>

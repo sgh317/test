@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <!--<link rel="stylesheet" href="css/sm.min.css">-->
+    <link rel="stylesheet" href="../main/css/sm.css">
+    <!-- 
+    <link rel="stylesheet" href="../main/css/sm-extend.min.css"> -->
+    <link rel="stylesheet" href="../main/css/sm.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    
+    <script type="text/javascript">
+    var submitCount = 0;
+    
+    var aCity = {11 : "北京", 12 : "天津", 13 : "河北", 14 : "山西", 15 : "内蒙古", 21 : "辽宁", 22 : "吉林", 23 : "黑龙江", 31 : "上海",
+			 32 : "江苏", 33 : "浙江", 34 : "安徽", 35 : "福建", 36 : "江西", 37 : "山东", 41 : "河南", 42 : "湖北 ", 43 : "湖南",
+			 44 : "广东", 45 : "广西", 46 : "海南", 50 : "重庆", 51 : "四川", 52 : "贵州", 53 : "云南", 54 : "西藏", 61 : "陕西",
+			 62 : "甘肃", 63 : "青海", 64 : "宁夏", 65 : "新疆", 71 : "台湾", 81 : "香港", 82 : "澳门", 91 : "国外" };
+   
+   function validateId(value){
+   	var re = new RegExp(/^(\d{2})(\d{4})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
+   	var arrSplit = value.match(re);    	
+   	
+   	if (arrSplit == null || this.aCity[parseInt(arrSplit[1])] == null) {
+   		return false;
+   	}
+   	
+   	var valnum;
+		var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+		var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+		var nTemp = 0, i;
+		for (i = 0; i < 17; i++) {
+			nTemp += value.substr(i, 1) * arrInt[i];
+		}
+		valnum = arrCh[nTemp % 11];
+		if (valnum != value.substr(17, 1)) {
+			// alert('18位身份证的校验码不正确！末位应为：' + valnum);
+			return false;
+		}
+		
+		return true;
+    }
+   
+   	
+    function submitHYX(){
+    	DIALOG.loading();
+    	
+    	if(submitCount>0){
+    		alert('请不要重复提交');
+    		return;
+    	}else{
+    		submitCount++;
+    	}
+    	
+    	var errorInfo = '';
+    	
+		var applicantName = $("#applicantName").val();
+		var applicantIdNo = $("#applicantIdNo").val();
+		
+		if(applicantName==null||applicantName.trim()==''){
+			errorInfo += '您未填写投保人姓名\n';
+		}
+			
+		if(!validateId(applicantIdNo)){
+			errorInfo += '您填写的身份证信息由错误\n';
+		}
+		
+		if(errorInfo!=null&&errorInfo!=''){
+			alert(errorInfo);
+			return;
+		}
+		
+		RpcContext.getBean('customerJsBean').submitHYX(applicantName,applicantIdNo,{
+			onSucess:function(result)
+    		{
+				var res = eval('('+result+')');
+				if(res.flag == 'Y')
+				{
+					DIALOG.close();
+					alert('保存成功');	
+					
+					window.location.href = "../BIND/result_success.html";
+				}else{
+					DIALOG.close();
+					alert(res.message);
+				}
+    				
+    		},
+    		onError:function(err)
+	        {
+    			DIALOG.close();
+	        }
+		});
+	}
+    </script>
+</head>
+<body>
+	<input type="hidden" id="orderId"/>
+    <div class="page" style="background:url(../main/img/flight_bg.jpg) top center no-repeat; background-size:cover;">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title"><i class="icon-bao"></i><span>领取全年航空意外保险</span></h1>
+        </header>
+        <nav class="bar bar-tab bar-button">
+            <a href="#" onclick="submitHYX();" class="button button-fill button-green">下一步</a>
+        </nav>
+        <div class="content accordion-list">
+            <div class="content-title" style="font-size:.6rem;">请输入姓名、身份证号，免费领取百万保额全年航空意外险</div>
+            <div class="step-form text-content">
+                <div class="form-style">
+                    <ul>
+                        <li>
+                        	<input type="text" class="input-text" placeholder="投保人姓名" id="applicantName"/>
+                        </li>
+                        <li>
+                            <input type="text" class="input-text" placeholder="投保人证件号" id="applicantIdNo"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        
+        
+    </div>
+    <script type="text/javascript" src="../main/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../main/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../main/js/sm-extend.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='js/commonUtil.js' charset='utf-8'></script>
+</body>
+</html>

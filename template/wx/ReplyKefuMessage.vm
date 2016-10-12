@@ -1,0 +1,6 @@
+<xml>
+<ToUserName><![CDATA[${ToUserName}]]></ToUserName>
+<FromUserName><![CDATA[${FromUserName}]]></FromUserName>
+<CreateTime>${CreateTime}</CreateTime>
+<MsgType><![CDATA[transfer_customer_service]]></MsgType>
+</xml>

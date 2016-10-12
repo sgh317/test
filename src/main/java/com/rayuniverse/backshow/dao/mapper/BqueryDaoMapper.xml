@@ -1,0 +1,102 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.backshow.dao.BqueryDao">
+
+	<select id="getGoodsList" resultType="java.util.HashMap">
+		SELECT wg.colorpic colorpic,
+			wg.proname proname,
+			wg.prodescri prodescri,
+			ws.sku sku,
+			ws.inventory inventory,
+			ws.sellprice sellprice,
+			ws.discountprice discountprice,
+			ws.isdiscount isdiscount,
+			wg.isshow isshow
+		FROM WGQC_Sku ws, WGQC_Goods wg
+		WHERE wg.proid = ws.proskuid
+	</select>
+
+	<select id="getAddgoods" resultType="java.util.HashMap">
+		INSERT into WGQC_Goods(pronname,
+			prodescri,
+			isdiscount,
+			sku,
+			ishow,
+			inventory,
+			sellprice,
+			discountprice,
+			colorpic,
+			Goodpic,
+			Gooddetail
+		) VALUES(#{pronname,jdbcType=VARCHAR},
+		#{prodescri,jdbcType=VARCHAR},
+		#{isdiscount,jdbcType=VARCHAR},
+		#{sku,jdbcType=VARCHAR},
+		#{ishow,jdbcType=VARCHAR},
+		#{inventory,jdbcType=VARCHAR},
+		#{sellprice,jdbcType=VARCHAR},
+		#{discountprice,jdbcType=VARCHAR},
+		#{colorpic,jdbcType=VARCHAR},
+		#{Goodpic,jdbcType=VARCHAR},
+		#{Gooddetail,jdbcType=VARCHAR}
+		)
+	</select>
+	
+	<select id="addSku" resultType="java.util.HashMap">
+			INSERT into WGQC_Sku(proskuid,
+								sku,
+								skuname,
+								proid,
+							isdiscount,
+							discountprice,
+								sellprice,
+								inventory,
+								sku_states,
+								create_time
+		) VALUES(#{proskuid,jdbcType=VARCHAR},
+		#{sku,jdbcType=VARCHAR},
+		#{skuname,jdbcType=VARCHAR},
+		#{proid,jdbcType=VARCHAR},
+		#{isdiscount,jdbcType=VARCHAR},
+		#{sellprice,jdbcType=VARCHAR},
+		#{inventory,jdbcType=VARCHAR},
+		#{sku_states,jdbcType=VARCHAR},
+		#{create_date,jdbcType=VARCHAR},
+		)
+	</select>
+	
+	
+	<select id="getCardList" resultType="java.util.HashMap">
+		SELECT proname, isshow FROM WGQC_Goods
+	</select>
+
+	<select id="getpraiseList" resultType="java.util.HashMap">
+		SELECT wm.nickname nickname,
+		wp.skugood shugood,
+		wp.praise_star praise_star,
+		wp.praise_content praise_content,
+		wp.praise_time praise_time,
+		wp.aduit_status aduit_status
+		FROM WGQC_Praise wp, WGQC_Member wm
+		where wp.user_id = wm.user_id
+	</select>
+
+	<!-- <select id="queryAdList" resultType="java.util.HashMap">
+		SELECT ad_picture, ad_location, ad_href, ad_status FROM WGQC_Ad
+	</select> -->
+
+	<select id="addAdvertise" resultType="java.util.HashMap">
+		INSERT into WGQC_Ad
+		(ad_catalog, ad_location, ad_status, ad_picture)
+		VALUES
+		(#{ad_catalog,jdbcType = VARCHAR},
+		#{ad_location,jdbcType = VARCHAR},
+		#{ad_status,jdbcType = VARCHAR},
+		#{ad_picture,jdbcType = VARCHAR})
+	</select>
+	
+	
+	
+</mapper>

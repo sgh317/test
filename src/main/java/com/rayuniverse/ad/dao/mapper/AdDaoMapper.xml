@@ -1,0 +1,57 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.product.dao.ProductDao">
+
+	<insert id="saveAdInfo" parameterType="com.rayuniverse.domain.AdDomain">
+		insert into WGQC_Ad
+		   (ad_id      ,
+			ad_picture ,
+			ad_location,
+			ad_href    ,
+			ad_status  ,
+			create_time)
+	    values
+	      (#{adId,jdbcType=VARCHAR},
+           #{adPicture,jdbcType=VARCHAR},
+           #{adLocation,jdbcType=VARCHAR},
+           #{adHref,jdbcType=VARCHAR},
+           #{adStatus,jdbcType=VARCHAR},
+           now());
+	</insert>
+		
+	<update id="updateAdInfo"  parameterType="com.rayuniverse.domain.AdDomain">
+		update WGQC_Ad 
+		   set ad_picture = #{adPicture,jdbcType=VARCHAR},
+		   	   ad_location = #{adLocation,jdbcType=VARCHAR},
+		   	   ad_href = #{adHref,jdbcType=VARCHAR},
+		   	   ad_status = #{adStatus,jdbcType=VARCHAR}
+		 where ad_id = #{adId,jdbcType=VARCHAR}
+    </update>	
+    
+     <select id="queryAdhome" resultType="java.util.HashMap">
+		SELECT wa.ad_picture  adpicture
+					from WGQC_Ad wa 
+		where wa.ad_status = 'Y'
+	</select>
+	
+	 <select id="queryHotadvise" resultType="java.util.HashMap">
+		SELECT wg.colorpic colorpic,ws.proname proname, wg.prodescri prodescri, ws.sku sku, ws.sellprice
+  			from WGQC_Sku ws, WGQC_Goods wg
+ 			where ws.proskuid = wg.proid
+   			and ws.isdiscount = 'N'
+ 			ORDER BY ws.salevolume DESC limit 12
+	</select>
+	
+	 <select id="querydiscountgood" resultType="java.util.HashMap">
+		SELECT wg.colorpic colorpic,ws.proname proname, wg.prodescri prodescri, ws.sku sku, ws.sellprice
+  			from WGQC_Sku ws, WGQC_Goods wg
+ 			where ws.proskuid = wg.proid
+   			and ws.isdiscount = 'Y'
+	</select>
+
+	
+	
+	
+</mapper>

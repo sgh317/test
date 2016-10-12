@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>个人保单详细信息</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/sm.min.css">
+    <link rel="stylesheet" href="css/sm-extend.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="css/card.insur.css?v=1.0" />
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/queryPolicyJsBean.js"></script>
+    <script type="text/javascript" src="./../common/js/policyTemplate.js"></script>
+    <script type="text/javascript" src="policyCarDetail.js"></script>
+    
+    <script id="policyDetailTemplate" type="text/template"> 
+    <% { %> 
+
+	<div class="form-box list-block white">
+                <div class="form-title">基本信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">保单号：<%=datas.policyNo%></span>                                                         
+                            </div>
+                        </div>
+                    </li>                    
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">                            	
+                                 <span class="start-time">险种名称：<%=datas.riskName%></span>   
+                                <span class="start-time">保费：<%=datas.payAmount%></span>                               
+                            </div>
+                        </div>
+                    </li>                                                      
+                </ul>
+            </div>
+            <div class="form-box list-block white">
+                <div class="form-title">车辆信息</div>
+                <ul class="product-intro">
+ 					<li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                             	<span class="start-time">车主姓名：<%=datas.clientName%></span>                                                            
+                            </div>
+                        </div>
+                    </li> 
+                     <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">                            
+                                <span class="start-time">证件号码：<%=datas.clientIdNo%></span>                                               
+                            </div>
+                        </div>
+                    </li>        
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">车牌号：<%=datas.carNo%></span>
+                                <span class="start-time">品牌型号：<%=datas.carClassifyType%></span>                              
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">初登日期：<%=datas.loadDate%></span>                            
+                            </div>
+                        </div>
+                    </li>
+ 					<li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">汽车座椅：<%=datas.carSeat%></span>
+								<span class="start-time">购买价格：<%=datas.buyPrice%></span>                             
+                            </div>
+                        </div>
+                    </li> 
+					<li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">车架号：<%=datas.frameNo%></span>
+								<span class="start-time">发动机号：<%=datas.engineNo%></span>                             
+                            </div>
+                        </div>
+                    </li>                                                   
+                </ul>
+            </div>
+            <div class="form-box list-block white">
+                <div class="form-title">投保人信息</div>
+                <ul class="product-intro">
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">姓名：<%=datas.clientName%></span>
+                                <span class="start-time">证件类型：身份证</span>
+                                
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">证件号码：<%=datas.clientIdNo%></span>
+                                <span class="start-time">联系电话：<%=datas.clientMobile%></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div> 
+
+ 			<div class="form-box list-block white">
+                <div class="form-title">保障信息</div>
+			<%_.each(datas.orderRiskInfoList, function(item) {%> 
+                <ul class="product-intro">
+					<li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">产品名称：<%=item.productName%></span>                                              
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">保费：<%=item.productConversionPrem%></span>
+                                <span class="start-time">保额：<%=item.productAmount%></span>
+                                
+                            </div>
+                        </div>
+                    </li>
+					<%_.each(item.orderRiskParameterList, function(param) {%>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <span class="start-time">参数名称：<%=param.keyValue%></span>
+                                <span class="start-time">参数描述：<%=param.parameterKeyDesc%></span>
+                            </div>
+                        </div>
+                    </li>
+					<%});%>
+                </ul>
+   			 <%});%> 
+            </div> 
+
+
+
+
+    <% } %> 
+</script> 
+    
+</head>
+<body>
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title">个人保单详细信息</h1>
+        </header>
+       
+        <div class="content accordion-list" id="policyDetailDiv">
+                               
+        </div>
+        
+        
+    </div>
+    <script type="text/javascript" src="js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='js/sm-extend.min.js' charset='utf-8'></script>
+    <script type="text/javascript">
+       /*  $(function(){
+            $.init();
+            $(".input-date").calendar();
+            $("#J_action").bind("click",function(){  // 演示链接,开发时请忽略
+                location.href = "detail_info.html";
+            })
+        }) */
+    </script>
+</body>
+</html>

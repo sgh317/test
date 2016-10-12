@@ -1,0 +1,246 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.product.dao.ProductDao">
+
+	<insert id="saveProductInfo" parameterType="com.rayuniverse.domain.ProductDomain">
+		insert into WGQC_Goods
+		   (proid 		,
+			classid     ,
+			cataid     ,
+			proname     ,
+			prodescri   ,
+			colorpic    ,
+			goodpic     ,
+			gooddetail  ,
+			prosericenum,
+			isshow      ,
+			isdiscount  ,
+			create_time )
+	    values
+	      (#{productId,jdbcType=VARCHAR},
+           #{classifyId,jdbcType=VARCHAR},
+           #{catalogId,jdbcType=VARCHAR},
+           #{productName,jdbcType=VARCHAR},
+           #{productIntroductio,jdbcType=VARCHAR},
+           #{productThumbnail,jdbcType=VARCHAR},
+           #{productPhotoAlbumImage,jdbcType=VARCHAR},
+           #{productDetail,jdbcType=VARCHAR},
+           #{producterialumber,jdbcType=VARCHAR},
+           #{isDiscount,jdbcType=VARCHAR},
+           #{isShow,jdbcType=VARCHAR},
+           now());
+	</insert>
+		
+	<insert id="saveSkuInfo" parameterType="com.rayuniverse.domain.SkuDomain">
+		insert into WGQC_Sku
+		   (proskuid		 ,
+			sku          ,
+			skuname      ,
+			proid        ,
+			isdiscount   ,
+			discountprice,
+			sellprice    ,
+			salevolume   ,
+			inventory    ,
+			sku_states   ,
+			proname      ,
+			create_time  
+			)
+	    values
+	      (#{skuId,jdbcType=VARCHAR},
+           #{skuCode,jdbcType=VARCHAR},
+           #{skuName,jdbcType=VARCHAR},
+           #{productId,jdbcType=VARCHAR},
+           #{isDiscount,jdbcType=VARCHAR},
+           #{discountPrice,jdbcType=VARCHAR},
+           #{skuSellPrice,jdbcType=VARCHAR},
+           #{skuSaleVolume,jdbcType=VARCHAR},
+           #{skuInventory,jdbcType=VARCHAR},
+           #{skuStates,jdbcType=VARCHAR},
+           #{productName,jdbcType=VARCHAR},
+           now());
+	</insert>
+	
+	<insert id="saveClassifyInfo" parameterType="java.util.HashMap">
+		insert into WGQC_Catalog
+		   (cid,
+	        cname,
+	        parent_cid,
+	        seq_id seqId,
+	        create_time 
+			)
+	    values
+	      (#{classifyId,jdbcType=VARCHAR},
+           #{classifyName,jdbcType=VARCHAR},
+           #{classifyParentId,jdbcType=VARCHAR},
+           #{parentSeqId,jdbcType=VARCHAR},
+           now());
+	</insert>
+	
+	<select id="queryCatalogList" resultType="java.util.HashMap">
+		select wg.cid,
+		       wg.cname,
+		       wg.parent_cid parentCid,
+		       wg.seq_id seqId,
+		       wg.create_time createTime
+		  from WGQC_Catalog wg
+		 where wg.cid != '003'
+	</select>
+	
+	<select id="queryClassifyList" resultType="java.util.HashMap">
+		select wg.cid,
+		       wg.cname,
+		       wg.parent_cid parentCid,
+		       (select cname from WGQC_Catalog where cid = wg.parent_cid) parentCname,
+		       wg.seq_id seqId,
+		       wg.create_time createTime
+		  from WGQC_Catalog wg
+		 where wg.cid != '003'
+		   and wg.parent_cid is not null
+		   <if test="parentcid != null and  parentcid != ''"> 
+		   and wg.parent_cid = #{parentcid,jdbcType=VARCHAR}
+		   </if>
+		   <if test="cname != null and  cname != ''"> 
+		   	and wg.cname like CONCAT('%',#{classifyNname,jdbcType=VARCHAR},'%')
+		   </if>
+		   order by wg.create_time desc
+		   <if test="startIndex != null"> 
+		 	limit #{startIndex} ,#{pageSize}
+		   </if>
+	</select>
+	
+	<select id="queryClassifyListTotalPageSize" resultType="java.lang.Integer">
+		select count(1)
+		  from WGQC_Catalog wg
+		 where wg.cid != '003'
+		   and wg.parent_cid is not null
+		   <if test="parentcid != null and  parentcid != ''"> 
+		   and wg.parent_cid = #{parentcid,jdbcType=VARCHAR}
+		   </if>
+		   <if test="cname != null and  cname != ''"> 
+		   	and wg.cname like CONCAT('%',#{classifyNname,jdbcType=VARCHAR},'%')
+		   </if>
+	</select>
+		
+	<select id="queryProductInfoList" resultType="java.util.HashMap">
+		select wg.proid,
+			   wg.colorpic,
+		       wg.proname,
+		       wg.prodescri,
+		       wg.isdiscount,
+		       wg.goodpic,
+		       wg.gooddetail,
+		       wc.cname,
+		       ws.proskuid,
+		       ws.skuname,
+		       ws.sellprice,
+		       ws.discountprice,
+		       ws.inventory,
+		       wg.isshow
+		  from WGQC_Goods wg, WGQC_Sku ws,WGQC_Catalog wc
+		 where wg.proid = ws.proid
+		   and wg.cataid = wc.cid
+		 <if test="catalogId == '003'"> 
+		   and wg.cataid = #{catalogId,jdbcType=VARCHAR}
+		 </if>
+		 <if test="produectName != null and  produectName != ''"> 
+		   and wg.proname like CONCAT('%',#{produectName,jdbcType=VARCHAR},'%')
+		 </if>
+		 <if test="productStatus != null and  productStatus != ''"> 
+		   and wg.isshow = #{productStatus,jdbcType=VARCHAR}
+		 </if>
+		 <if test="productId != null and  productId != ''"> 
+		   and wg.proid = #{productId,jdbcType=VARCHAR}
+		 </if>
+		 order by wg.create_time desc
+		 <if test="startIndex != null"> 
+		 limit #{startIndex} ,#{pageSize}
+		 </if>
+	</select>
+		
+	<select id="queryProductInfoListTotalPageSize" resultType="java.lang.Integer">
+		select count(1)
+		  from WGQC_Goods wg, WGQC_Sku ws,WGQC_Catalog wc
+		 where wg.proid = ws.proid
+		   and wg.cataid = wc.cid
+		 <if test="catalogId == '003'"> 
+		   and wg.cataid = #{catalogId,jdbcType=VARCHAR}
+		 </if>
+		 <if test="produectName != null and  produectName != ''"> 
+		   and wg.proname like CONCAT('%',#{produectName,jdbcType=VARCHAR},'%')
+		 </if>
+		 <if test="productStatus != null and  productStatus != ''"> 
+		   and wg.isshow = #{productStatus,jdbcType=VARCHAR}
+		 </if>
+	</select>
+	
+	<update id="updateProductStatus"  parameterType="java.util.HashMap">
+		update WGQC_Goods set isshow = #{productStatus,jdbcType=VARCHAR} where proid = #{productId,jdbcType=VARCHAR}
+    </update>	
+	<update id="updateProductInfo"  parameterType="com.rayuniverse.domain.ProductDomain">
+		update WGQC_Goods 
+		   set 
+		   <if test="productName != null and  productName != ''"> 
+		   	proname = #{productName,jdbcType=VARCHAR},
+		   </if>
+		   <if test="productIntroductio != null and  productIntroductio != ''"> 
+		   	   prodescri = #{productIntroductio,jdbcType=VARCHAR},
+		   </if>
+		   <if test="productThumbnail != null and  productThumbnail != ''"> 
+		   	   colorpic = #{productThumbnail,jdbcType=VARCHAR},
+		   </if>
+		   <if test="productPhotoAlbumImage != null and  productPhotoAlbumImage != ''"> 
+		   	   goodpic = #{productPhotoAlbumImage,jdbcType=VARCHAR},
+		   </if>
+		   <if test="productDetail != null and  productDetail != ''"> 
+		   	   gooddetail = #{productDetail,jdbcType=VARCHAR},
+		   </if>
+		   <if test="isDiscount != null and  isDiscount != ''"> 
+		   	   isdiscount = #{isDiscount,jdbcType=VARCHAR},
+		   </if>
+		   <if test="classifyId != null and  classifyId != ''"> 
+		   	   classid = #{classifyId,jdbcType=VARCHAR},
+		   </if>
+		   <if test="catalogId != null and  catalogId != ''"> 
+		   	   cataid = #{catalogId,jdbcType=VARCHAR},
+		   </if>
+		   <if test="isShow != null and  isShow != ''"> 
+		   	   isshow = #{isShow,jdbcType=VARCHAR}
+		   </if>
+		 where proid = #{productId,jdbcType=VARCHAR}
+    </update>	
+	<update id="updateSkuInfo"  parameterType="com.rayuniverse.domain.SkuDomain">
+		update WGQC_Sku 
+		   set skuname = #{skuName,jdbcType=VARCHAR},
+		   	   isdiscount = #{isDiscount,jdbcType=VARCHAR},
+		   	   discountprice = #{discountPrice,jdbcType=VARCHAR},
+		   	   sellprice = #{skuSellPrice,jdbcType=VARCHAR},
+		   	   inventory = #{skuInventory,jdbcType=VARCHAR}
+		 where proskuid = #{skuId,jdbcType=VARCHAR}
+    </update>
+
+
+	<select id="queryProductClassifyList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT wg.colorpic colorpic,ws.proname proname, wg.prodescri prodescri, ws.sku sku, ws.sellprice
+  			from WGQC_Sku ws, WGQC_Goods wg
+ 			where ws.proskuid = wg.proid
+		and ws.classify = #{classify,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteSkuInfo" parameterType="java.lang.String">
+     delete from  WGQC_Sku where proskuid = #{skuId,jdbcType=VARCHAR}
+   </delete>
+	
+	<select id="queryGooddetail" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT wg.gooddetail
+  			from WGQC_Goods wg
+ 			where wg.proname = #{proid,jdbcType=VARCHAR}
+ 			order by wg.create_time desc
+	</select>
+	
+	
+    
+  
+</mapper>

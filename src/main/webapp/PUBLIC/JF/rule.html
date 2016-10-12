@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>积分规则</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/sm.min.css">
+    <link rel="stylesheet" href="css/sm-extend.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="css/card.insur.css?v=1.0" />
+</head>
+<body>
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title">积分规则</h1>
+        </header>
+        <!--<nav class="bar bar-tab bar-button">
+            <div class="webkit-box-align">
+                <div>
+                    <a id="J_action" href="#" class="button button-fill button-danger">确认下单</a>
+                </div>
+            </div>
+        </nav>-->
+        <div class="content pb100" style="background-color: #fbfbfb;">           
+            <p style="padding-left:.45rem;font-size:15;"><b>积分规则详细：</b></p>
+            <p style="padding-left:.45rem;">1、关注并成功通过验证的客户，立即赠予15,000积分；</p>
+            <p style="padding-left:.45rem;">2、在客户投保车辆保险过程中，积分可用于抵扣商业保险部分的保费，最高抵扣比例为商业车辆保险保费的30%；</p>
+            <p style="padding-left:.45rem;">3、点击“积分中心 - 查询积分”，可查询现有积分以及往期积分消费记录</p>
+            <p></p>
+            <p></p>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='js/sm-extend.min.js' charset='utf-8'></script>
+    <script type="text/javascript">
+        $(function(){
+            $.init();
+            $(".input-date").calendar();
+            $("#J_action").bind("click",function(){  // 演示链接,开发时请忽略
+                location.href = "detail_info.html";
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>积分消费查询</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="css/sm.min.css">
+    <link rel="stylesheet" href="css/sm-extend.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="css/card.insur.css?v=1.0" />
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/queryPolicyJsBean.js"></script>
+    <script type="text/javascript" src="./../common/js/policyTemplate.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+  
+ 
+	</script>
+    
+    <script id="scoreListDivTemplate" type="text/template">
+	<%_.each(datas, function(item) {%>
+	           <li class="item-content">
+                     <div class="item-inner">
+                            <div class="item-title">
+								
+                                <span class="start-time">消费时间：<%=item.submitTime%></span>
+								<span class="start-time">抵扣积分：<%=item.score%></span>
+                                
+                            </div>
+                        </div>
+                    </li>
+	<%});%> 
+ 
+	</script>
+    
+</head>
+<body>
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title">积分消费查询</h1>
+        </header>
+       
+        <div class="content accordion-list">
+            <div class="form-box list-block white">
+            
+            
+                <div class="form-title" id="ScoreDiv"></div>
+                               
+                
+                <ul class="product-intro" id="ScoreListDiv">
+                
+                </ul>
+                
+                
+            </div>
+            
+        </div>
+    </div>
+    <script type="text/javascript" src="js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='js/sm-extend.min.js' charset='utf-8'></script>
+   
+</body>
+</html>

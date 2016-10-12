@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <!--<link rel="stylesheet" href="css/sm.min.css">-->
+    <link rel="stylesheet" href="../main/css/sm.css">
+    <!-- 
+    <link rel="stylesheet" href="../main/css/sm-extend.min.css"> -->
+    <link rel="stylesheet" href="../main/css/sm.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    
+    <script type="text/javascript">
+    function delBind(){
+    	RpcContext.getBean('customerJsBean').delBind({
+			onSucess:function(result)
+    		{
+				var res = eval('('+result+')');
+				if(res.flag == 'Y')
+				{
+					DIALOG.close();
+					alert('删除成功');	
+					
+					window.location.href = "../BIND/result_success.html";
+				}else{
+					DIALOG.close();
+					alert(res.message);
+				}
+    				
+    		},
+    		onError:function(err)
+	        {
+    			DIALOG.close();
+	        }
+		});
+    }
+    </script>
+</head>
+<body>
+	<input type="hidden" id="orderId"/>
+    <div class="page" >
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title"><i class="icon-bao"></i><span>取消绑定</span></h1>
+        </header>
+        <nav class="bar bar-tab bar-button">
+            <a href="#" onclick="delBind();" class="button button-fill button-green">下一步</a>
+        </nav>
+        
+    </div>
+    <script type="text/javascript" src="../main/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../main/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../main/js/sm-extend.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='js/commonUtil.js' charset='utf-8'></script>
+</body>
+</html>

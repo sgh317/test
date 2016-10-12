@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <title>大地车险</title>
+    <!-- 库css -->
+    <link rel="stylesheet" href="../main/css/sm.min.css">
+    <!-- <link rel="stylesheet" href="../main/css/sm.css"> -->
+    <link rel="stylesheet" href="../main/css/sm-extend.min.css">
+    <!-- 私有样式 -->
+    <link rel="stylesheet" href="../main/css/ddcx.css?v=1.0" />
+    <script language="javascript" src="../common/js/jquery-1.9.1.js"></script>
+	<script language="javascript" src="../common/js/underscore.js"></script>
+	<script language="javascript" src="../common/js/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/cfg.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/jquery-sso-patch_mobile.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./../common/js/JsonStubMobile.js"></script>
+    <script type="text/javascript" src="./../Stub/customerJsBean.js"></script>
+    <script language="javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+    <style type="text/css">
+        .opt-selected {
+            background-color: #FFE6FF;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    var hyxcount = 0;
+    var hasBJ = 'Y';
+    var submitCount = 0;
+    
+    $(function(){
+    	RpcContext.getBean('customerJsBean').loadZSInfo(
+    	{
+    		onSucess:function(result)
+		    {
+				var res = eval('('+result+')');
+				if(res.flag == 'Y'){
+					hyxcount = parseInt(res.hyxcount);
+					hasBJ = res.hasBJ;
+				}else{
+					alert(res.message);
+				}
+			 },
+			 onError:function(err)
+			{
+			     alert(err);
+			}		
+    	});
+    });
+    
+    function toZS(zsType){
+    	$("#zsType").attr('value',zsType);
+    }
+    
+    function zsSubmit(){
+    	DIALOG.loading();
+    	
+    	if(submitCount>0){
+    		alert('请不要重复提交');
+    		return;
+    	}else{
+    		submitCount++;
+    	}
+    	
+    	var zsType = $("#zsType").val();
+    	
+    	if(zsType == null||zsType == ''){
+    		alert('您还未选择需要赠送的类型');
+    		return;
+    	}
+    	
+    	RpcContext.getBean('customerJsBean').zsProductInfo(zsType,
+    			{
+    				onSucess:function(result)
+    			    {
+    					var res = eval('('+result+')');
+    					if(res.flag == 'Y'){
+    						DIALOG.close();
+    						alert('恭喜您，已赠送成功');
+    						window.location.href('../card/card_info.html');
+    					}else{
+    						DIALOG.close();
+    						alert(res.message);
+    					}
+    				 },
+    				 onError:function(err)
+    				{
+    					 DIALOG.close();
+    				     alert(err);
+    				}
+    		});
+    	}
+    
+    function toHYX(){
+    	if(hyxcount>0){
+    		alert('您已领取过航意险');
+    		return;
+    	}
+    	
+    	if(hasBJ == 'N'){
+    		window.location.href='../card/card_package.html';	
+    	}else{
+    		window.location.href='../card/card_hyx.html';	
+    	}
+    	
+    }
+    
+    $(function() {
+        //$.init();
+
+        $('.opt-item').on('click', function(e){
+        	submitCount = 0;
+            e.stopPropagation();
+            $('.opt-item').removeClass('opt-selected');
+            $(this).addClass('opt-selected');
+
+//            $("input[name='pay-style']").click();
+            $("#pay-"+$(this).attr('v')).click();
+        });            
+    });
+    </script>
+    
+</head>
+<body>
+    <div class="page">
+    	<input type="hidden" id="zsType" value=""/>
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <h1 class="title"><i class="icon-money"></i><span>认证奖励领取</span></h1>
+        </header>
+        <nav class="bar bar-tab bar-button-zs">
+            <a href="#" onclick="zsSubmit();" class="button button-fill button-green-zs external">确定</a>
+        </nav>
+        <div class="content accordion-list step4-content">
+            <ul class="list-content">
+                <li>
+                    <div class="list-inner">
+                        <h2 style="color: #F34B00;">请选择下列奖励之一领取</h2>
+                    </div>
+                </li>
+                <li class="opt-item" v="mobile">
+                    <i class="icon-mobile"></i>
+                    <div class="list-inner">
+                        <h2>话费奖励</h2>
+                        <p>10元话费奖励，大地为您充值，立即到账！</p>
+                    </div>
+                    <div class="list-after">
+                        <div class="input-radio">
+                            <input name="pay-style" id="pay-mobile" type="radio" value="mobile" onclick="toZS('tel');"/>
+                        </div>
+                    </div>
+                </li>
+                <li class="opt-item" v="wifi">
+                    <i class="icon-wifi"></i>
+                    <div class="list-inner">
+                        <h2>流量奖励</h2>
+                        <p>10元等值流量激励，大地为您充值，即刻到账！</p>
+                    </div>
+                    <div class="list-after">
+                        <div class="input-radio">
+                            <input name="pay-style" id="pay-wifi" type="radio" value="wifi" onclick="toZS('ll');"/>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="imgLink external">
+                <div class="btn-imgLink" onclick="toHYX();"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../main/js/zepto.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../main/js/sm.min.js" charset="utf-8"></script>
+    <script type='text/javascript' src='../main/js/sm-extend.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../card/js/commonUtil.js' charset='utf-8'></script>
+    <script type="text/javascript">
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,785 @@
+@charset "UTF-8";
+
+/* ========================
+ * program:lars wx site
+ * date:2015-7-8
+ * ========================
+ */
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, header, hgroup, nav, section, article, aside, footer, figure, figcaption, menu, button {
+    margin:0;
+    padding:0;
+    outline:0;
+}
+
+html {
+    font-size:20px;
+}
+
+body,html {
+    /* iOS 4.0+ 使用英文字体 Helvetica Neue，之前的iOS版本降级使用 Helvetica。中文字体设置为华文黑体STHeiTi。*/
+    font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+    background-color:#eee;
+    overflow-x:hidden;
+}
+
+body {
+    max-width:640px;
+    margin:0 auto;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight:normal;
+}
+
+a {
+    text-decoration: none;
+    color:#0079fc;
+}
+
+em,i {
+    font-style: normal;
+}
+
+em {
+    color:#ff5f00;
+}
+
+ul,li {
+    list-style:none;
+}
+
+input, button, textarea, select {
+    font-family:inherit;
+    font-size:inherit;
+    font-weight:inherit;
+    border:0;
+    -webkit-appearance: none;
+    outline:0;
+}
+
+a, button, input,
+select, textarea, a:focus,
+button:focus, input:focus,
+select:focus, textarea:focus, [onclick] {
+    outline:0;
+    -webkit-tap-highlight-color:rgba(255,255,255,0);
+}
+
+/* 背景精灵 */
+
+.tapLink {
+    font-size:22px;
+    color:#0079fc
+}
+
+.green {
+    color:#31bd80;
+}
+
+.blue {
+    color:#5f80d8;
+}
+
+.red {
+    color:#ff4645;
+}
+
+.yellow {
+    color:#ff9300 !important;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.gray {
+    color:#666;
+}
+
+.text-seo {
+    font-size:0;
+    line-height:0;
+}
+
+.mt-1 {
+    margin-top:-1px !important;
+}
+
+.mt22 {
+    margin-top:22px !important;
+}
+
+.mt20 {
+    margin-top:20px !important;
+}
+
+.mr20 {
+    margin-right:20px !important;
+}
+
+.mb20 {
+    margin-bottom:20px !important;
+}
+
+.pt20 {
+    padding-top:20px;
+}
+
+.pb100 {
+   padding-bottom:100px !important;
+}
+
+.h70 {
+    height:70px !important;
+}
+
+.h100 {
+    height:100px !important;
+}
+
+.h160 {
+    height:160px !important;
+}
+
+.levelBox {
+    display:-webkit-box;
+    display:box;
+}
+
+.levelRight {
+    display:-webkit-box;
+    display:box;
+    -webkit-box-pack:end;
+    box-pack:end;
+}
+
+.grid-50 {
+    width:50%;
+}
+
+.icon,
+.icon:after
+{
+    display:block;
+    background:url(../img/sprite.png) no-repeat -9999em;
+}
+
+.space {
+    -webkit-box-flex:1;
+}
+
+/* 表单通用样式 */
+
+.formBox {
+    padding:20px 15px;
+}
+
+.formBox > ul > li {
+    position:relative;
+    margin-bottom:20px;
+}
+
+.formBox > ul > li.inputView,
+.formBox.formView > ul > li
+{
+    position:relative;
+    border:1px solid #dedede;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    padding:20px 10px;
+    width:100%;
+    height:70px;
+    font-size:24px;
+    color:#333;
+    text-align:left;
+    background-color:#fff;
+}
+
+.formBox > ul > li:last-child {
+    margin-bottom:0;
+}
+
+.formBox > ul > li a {
+    font-size:24px;
+}
+
+.formBox > ul > li span {
+    color:#666;
+    font-size:22px;
+}
+
+.formBox .unFormDomBox {
+    margin:30px 0;
+}
+
+.formBox input[type=text],
+.formBox input[type=password],
+.formBox input[type=date],
+.formBox input[type=datetime],
+.formBox input[type=file],
+.formBox select.selectDefault
+{
+    border:1px solid #dedede;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    padding:20px 10px;
+    width:100%;
+    height:70px;
+    font-size:24px;
+    color:#333;
+    text-align:left;
+    background-color:#fff;
+}
+
+.formBox input[type=text]:focus,
+.formBox input[type=password]:focus,
+.formBox textarea:focus
+{
+    border-color:#017afc;
+}
+
+.formBox input[type=text].error {
+    color:#e64e3e;
+}
+
+.formBox input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+    line-height:30px;
+}
+
+.formBox .levelBox > div {
+    -webkit-box-flex:1;
+}
+
+.formBox .levelBox .space {
+    -webkit-box-flex:0;
+    width:20px;
+}
+
+.formBox .inputSelectList {
+    position:relative;
+}
+
+.formBox .inputSelectList input[type=file] {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:2;
+    border:1px solid #dedede;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    padding:20px 10px;
+    width:100%;
+    height:70px;
+    opacity:0;
+}
+
+.formBox .inputSelectList input[type=date] {
+    padding-left:115px;
+}
+
+.formBox .inputSelectList label {
+    position:absolute;
+    left:11px;
+    top:20px;
+    color:#333;
+    font-size:24px;
+}
+
+.formBox .inputSelectList input[type=date]:focus + label {
+    display:none;
+}
+
+.formBox input[type=file] {
+    position:relative;
+    -webkit-appearance:none;
+}
+
+.formBox .radioBox {
+    display:-webkit-box;
+}
+
+.formBox .radioBox .whiteSpace {
+    display:block;
+    width:30px;
+}
+
+.formBox .inputSelect {
+    display:block;
+    -webkit-box-flex:1;
+    position:relative;
+    border:1px solid #dededd;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+    width:122px;
+    height:44px;
+}
+
+.formBox .inputSelect.bigSelect {
+    height:60px;
+    background-color:#fff;
+}
+
+.formBox .inputSelect > label {
+    display:block;
+    line-height:44px;
+    text-align:center;
+}
+
+.formBox .inputSelect.bigSelect > label {
+    line-height:60px;
+}
+
+.formBox .inputSelect.selected {
+    border-color:#ff5f00;
+    background-color:#ff5f00;
+}
+
+.formBox .inputSelect.selected label {
+    padding-right:32px;
+    color:#fff;
+}
+
+.formBox .inputSelect.selected:after {
+    display:block;
+    content:"";
+    position:absolute;
+    right:14px;
+    top:50%;
+    margin-top:-6px;
+    z-index:2;
+    width:18px;
+    height:12px;
+    background-position:-31px -10px;
+}
+
+.formBox .iconAddress {
+    display:block;
+    position:absolute;
+    right:20px;
+    top:19px;
+    z-index:2;
+    width:24px;
+    height:32px;
+    background-position:0 0;
+}
+
+.formBox input.inputAddress {
+    padding:20px 50px 20px 10px;
+}
+
+.formBox .inputCardBox {
+    border:1px solid #dedede;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    padding:20px 12px;
+    width:100%;
+    font-size:22px;
+    color:#333;
+    background-color:#fff;
+}
+
+.formBox textarea {
+    border:1px solid #dedede;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    padding:15px 10px;
+    width:100%;
+    min-height:100px;
+    font-size:22px;
+    color:#333;
+    background-color:#fff;
+}
+
+.formTips {
+    position:relative;
+    display:-webkit-box;
+    -webkit-box-align:center;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    border:1px solid #e64f3f;
+    padding:5px 10px 5px 72px;
+    min-height:50px;
+    line-height:1.3em;
+    font-size:24px;
+    color:#333;
+    background-color:#fff;
+}
+
+.formTips:after {
+    display:block;
+    content:"";
+    position:absolute;
+    left:20px;
+    top:50%;
+    margin-top:-18px;
+    width:36px;
+    height:36px;
+    background:url(../img/sprite.png) no-repeat -9999em;
+}
+
+.formTips.warn:after {
+    background-position:0 0;
+}
+
+.selectArrowDown:after {
+    display:block;
+    content:"";
+    position:absolute;
+    right:15px;
+    top:28px;
+    width:0;
+    height:0;
+    border-width:15px;
+    border-style:solid;
+    border-color:#333 transparent transparent transparent;
+    -webkit-border-radius:2px;
+}
+
+.inputCardBox > dl {
+    margin-bottom:20px;
+}
+
+.inputCardBox > dl:last-child {
+    margin-bottom:10px;
+}
+
+.inputCardBox > dl > dt {
+    margin-bottom:10px;
+}
+
+.inputCardBox > dl > dt .title {
+    font-size:22px;
+    color:#333;
+}
+
+.ui-checkbox input:before {
+    top:-14px;
+}
+
+.ui-checkbox input {
+    margin-right:8px;
+}
+
+.submitBar {
+    position:fixed;
+    left:0;
+    bottom:0;
+    z-index:99;
+    -webkit-box-sizing: border-box;
+    width:100%;
+    border-top:1px solid #dcdbdb;
+    padding:16px 14px;
+    background-color:#f7f7f7;
+}
+
+.hasFixBox {
+    padding-bottom:100px;
+}
+
+/*  按钮组件 */
+
+.ui-btn-b {
+    -webkit-border-radius:3px;
+    border-radius:3px;
+    width:100%;
+    height:60px;
+    font-size:26px;
+    color:#fff;
+}
+
+.ui-btn-b:active {
+    opacity:0.9;
+}
+
+.ui-btn-cancel {
+    border:1px solid #ddd;
+    background-color:#fff;
+    color:#666;
+}
+
+.ui-btn-s {
+    -webkit-border-radius:3px;
+    border-radius:3px;
+    width:200px;
+    height:52px;
+    font-size:26px;
+    color:#fff;
+}
+
+.keyCodeBox {
+    position:relative;
+}
+
+.keyCodeBox .ui-btn-key {
+    -webkit-border-radius:3px;
+    border-radius:3px;
+    position:absolute;
+    right:13px;
+    top:14px;
+    padding:0 15px;
+    height:42px;
+    background-color:#e1e1e1;
+    color:#666;
+    font-size:22px;
+}
+
+.keyCodeBox .ui-btn-key:disabled {
+    color:#999;
+}
+
+/* 按钮颜色 */
+
+.ui-btn-orange {
+    background-color:#ff5f00;
+}
+
+.ui-btn-green {
+    background-color:#5cb85c;
+}
+
+.ui-btn-red {
+    background-color:#ff4645;
+}
+
+.ui-btn-weixin {
+    background-color:#06bf04;
+}
+
+.ui-btn-alipay {
+    background-color:#ff5f00;
+}
+
+/* 理赔首页 */
+
+.indexEntrance {
+    padding:22px 30px;
+    overflow:hidden;
+}
+
+.indexEntrance > ul {
+    width:650px;
+    font-size:0;
+}
+
+.indexEntrance > ul > li {
+    display:inline-block;
+    vertical-align: top;
+    margin-right:70px;
+    margin-bottom:38px;
+    width:92px;
+    height:120px;
+}
+
+.indexEntrance > ul > li a {
+    display:block;
+}
+
+.indexEntrance > ul > li a img {
+    display:block;
+    margin-bottom:8px;
+}
+
+.indexEntrance > ul > li a h2 {
+    font-size:22px;
+    color:#000;
+}
+
+/* 申请状态 */
+
+.resultTip {
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    padding:80px 0;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+}
+
+.resultTip p {
+    font-size:24px;
+    color:#333;
+    line-height:44px;
+    text-align:center;
+}
+
+.iconWarn {
+    width:98px;
+    height:98px;
+    background-position:0 -140px;
+}
+
+.iconSuccess {
+    width:98px;
+    height:98px;
+    background-position:0 -40px;
+}
+
+.resultTip .icon {
+    margin-bottom:30px;
+}
+
+.linkButton {
+    display:block;
+    border:1px solid #dededd;
+    width:270px;
+    height:60px;
+    line-height:60px;
+    background-color:#fff;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    font-size:24px;
+    text-align:center;
+    color:#333;
+}
+
+.resultTip .linkButton {
+    margin-top:50px;
+}
+
+/* 上传资料 */
+
+.formCard {
+    margin-bottom:20px;
+    border:1px solid #dedede;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    padding:0 15px;
+    width:100%;
+    background-color:#fff;
+}
+
+.formCard dl dt {
+    display:-webkit-box;
+    border-bottom:1px solid #dededd;
+    height:58px;
+    line-height:58px;
+    font-size:24px;
+    color:#333;
+}
+
+.formCard dl dt a {
+    color:#dededd;
+}
+
+.formCard dl dt em {
+    padding-left:10px;
+    font-size:24px;
+}
+
+.userInfo {
+    margin:10px 0;
+}
+
+.userInfo li {
+    padding:5px 0;
+    line-height:26px;
+    color:#666;
+    font-size:22px;
+}
+
+.updateList li {
+    display:inline-block;
+    vertical-align:top;
+    position:relative;
+    margin:32px 20px 32px 0;
+    width:82px;
+    height:82px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+}
+
+.updateList li img {
+    display:block;
+    width:82px;
+    height:82px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+}
+
+.updateList li .delete {
+    display:none;
+    position:absolute;
+    right:-8px;
+    top:-8px;
+    width:32px;
+    height:32px;
+    background:url(../img/sprite.png) no-repeat -78px 0;
+}
+
+.btnUpdate {
+    width:82px;
+    height:82px;
+    background:url(../img/sprite.png) no-repeat 0 -242px;
+}
+
+.ui-dialog dl{
+    position:relative;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    padding:0 15px;
+    background-color:#fff;
+}
+
+.ui-dialog dl .close {
+    display:block;
+    position:absolute;
+    right:15px;
+    top:20px;
+    width:20px;
+    height:20px;
+    background:url(../img/sprite.png) no-repeat -50px -5px;
+}
+
+.ui-dialog dl dt {
+    border-bottom:1px solid #dededd;
+    height:64px;
+    line-height:64px;
+    color:#333;
+    font-size:24px;
+}
+
+.ui-dialog dl dd {
+    padding:30px 10px;
+    display:-webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align:center;
+}
+
+.caseDelete {
+    margin-top:20px;
+    font-size:28px;
+}
+
+/* 信息提示 */
+
+.insurance .head {
+    border-bottom:1px solid #dededd;
+    height:79px;
+    line-height:79px;
+    text-align:center;
+    color:#333;
+    font-size:32px;
+}
+
+.insurance .content {
+    padding:10px 20px;
+}
+
+.insurance .content {
+    font-size:28px;
+    color:#333;
+    line-height:60px;
+}

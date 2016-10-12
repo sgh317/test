@@ -1,0 +1,49 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.backmanage.dao.BmQueryDao">
+
+<select id="queryNewOrder" resultType="java.lang.Integer">
+	<![CDATA[
+		SELECT COUNT(1)
+  			FROM WGQC_Order
+ 		WHERE order_type = 'X'
+   		AND create_time BETWEEN SUBDATE(now(),interval 0.5 minute) AND NOW()
+	]]>
+</select>
+
+<select id="querySumsaleBymonth" resultType="java.util.HashMap">
+		<![CDATA[
+  		select v.month, ifnull(b.sumsale, 0) sumsale
+	  		from past_12month_view v
+	   	left join (select DATE_FORMAT(t.create_time, '%y/%m') month,
+	                     SUM(t.sum_pay) sumsale
+	                from WGQC_Order t
+	               where DATE_FORMAT(t.create_time, '%y/%m') >
+	                     DATE_FORMAT(date_sub(curdate(), interval 12 month),
+	                                '%y/%m')
+									and order_type = 'X'
+	              GROUP BY MONTH) b on v.month = b.month
+	 	group by v.month
+		]]>
+	</select>
+
+
+	<select id="querySumorderBymonth" resultType="java.util.HashMap">
+		<![CDATA[
+			select v.month month, ifnull(b.order_num, 0) order_num
+		      from past_12month_view v
+		 left join (select DATE_FORMAT(t.create_time, '%y/%m') month,
+		                   count(1) order_num
+		              from WGQC_Order t
+		             where DATE_FORMAT(t.create_time, '%y/%m') >
+		                   DATE_FORMAT(date_sub(curdate(), interval 12 month),'%y/%m')
+									and order_type = 'X'
+		              group by month) b on v.month = b.month
+		 group by v.month
+		]]>
+	</select>
+
+
+</mapper>

@@ -1,0 +1,67 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rayuniverse.wchat.gw.schema.dao.SchemaDao">
+	<sql id="prefixSql">
+		<if test="pageSize != null and  pageSize != '' and  pageSize != 0"> 
+			SELECT * FROM (select row_.*, rownum start_rownum_ from
+			(
+			</if>
+		</sql>
+		<sql id="suffixSql">
+			<if test="pageSize != null and  pageSize != '' and  pageSize != 0"> 
+			<![CDATA[
+			) row_ WHERE rownum <= #{startIndex,jdbcType=NUMERIC}+#{pageSize,jdbcType=NUMERIC} )  WHERE start_rownum_ > #{startIndex,jdbcType=NUMERIC}
+			]]>
+		</if>
+	</sql>
+	
+	<resultMap id="schemaRM" type="com.rayuniverse.wchat.gw.schema.domain.Schema">
+		<id property="id" column="id" />
+		<id property="type" column="type"/>
+		<id property="data" column="data" />
+		<id property="flag" column="flag" />
+	</resultMap>
+	
+	
+	<select id="getAllSchema"   resultType="com.rayuniverse.wchat.gw.schema.domain.Schema">
+	      select id as id,data as data from key_message where flag=1
+	</select>
+	
+	<select id="getSchemaList" parameterType="java.util.HashMap" resultMap="schemaRM">
+		<include refid="prefixSql"/>
+		SELECT t.id, t.type, t.data, t.flag 
+		FROM key_message t
+		where 1 = 1
+		<if test="type != null and type != ''">
+			and t.type like CONCAT(#{type,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="flag != null and flag != ''">
+			and t.flag = #{flag,jdbcType=VARCHAR}
+		</if>
+		<include refid="suffixSql"/>
+	</select>
+	
+	<insert id="addSchemaInfo" parameterType="com.rayuniverse.wchat.gw.schema.domain.Schema" >
+		INSERT INTO key_message(id, type, data, flag) VALUES(#{id,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{data,jdbcType=BLOB},1)
+	</insert>
+	
+	<select id="getSchemaInfoById" parameterType="java.lang.String" resultMap="schemaRM">
+		SELECT t.id, t.type, t.data, t.flag 
+		FROM key_message t
+		where t.id = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateSchemaInfo" parameterType="com.rayuniverse.wchat.gw.schema.domain.Schema">
+		update key_message
+		set type = #{type,jdbcType=VARCHAR},
+			data = #{data,jdbcType=BLOB}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteSchemaInfo" parameterType="java.lang.String">
+		update key_message
+		set flag = 0 where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

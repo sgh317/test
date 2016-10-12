@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rayuniverse.wchat.gw.asyn.AsyncTaskDao">
+
+	<insert id="addNewTask" parameterType="com.rayuniverse.domain.TaskData">
+	insert into async_task_list(invoke_id,
+								processor_id,
+								method,
+								lock_end_time,
+								context,
+								create_time,
+								update_time,
+								exe_count)
+						  values(#{invokeId},
+						         #{processorId},
+						         #{method}
+						         now(),
+						         #{lockEndTime},
+						         now(),
+						         now(),
+						         0)
+	</insert>						         
+
+</mapper>
